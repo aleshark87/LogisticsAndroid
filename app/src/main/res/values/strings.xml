@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Logistics</string>
+    <string name="welcomeMsg">Welcome to Logistics!</string>
+    <string name="captionMsg">Here you can be:</string>
+    <string name="companyBtMsg">Company</string>
+    <string name="carrierBtMsg">Carrier</string>
+    <string name="newCarrierBtMsg">New Carrier</string>
+</resources>

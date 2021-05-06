@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/middle_blue"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/welcomeTV"
+        style="@style/bigLabelJet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcomeMsg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        android:id="@+id/welcomeCaptionTV"
+        style="@style/smallLabelJet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="@string/captionMsg"
+        app:layout_constraintStart_toStartOf="@+id/welcomeTV"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeTV" />
+
+    <Button
+        android:id="@+id/companyBt"
+        style="@style/homepageBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/companyBtMsg"
+        app:layout_constraintEnd_toEndOf="@+id/welcomeCaptionTV"
+        app:layout_constraintStart_toStartOf="@+id/welcomeCaptionTV"
+        app:layout_constraintTop_toBottomOf="@+id/welcomeCaptionTV">
+    </Button>
+
+    <Button
+        android:id="@+id/carrierBt"
+        style="@style/homepageBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/carrierBtMsg"
+        app:layout_constraintEnd_toEndOf="@id/companyBt"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/companyBt"
+        app:layout_constraintTop_toBottomOf="@id/companyBt" />
+
+    <Button
+        android:id="@+id/newCarrierBt"
+        style="@style/homepageBt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/newCarrierBtMsg"
+        app:layout_constraintEnd_toEndOf="@id/carrierBt"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/carrierBt"
+        app:layout_constraintTop_toBottomOf="@id/carrierBt" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
