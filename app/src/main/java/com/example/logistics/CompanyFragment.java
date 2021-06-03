@@ -62,7 +62,7 @@ public class CompanyFragment extends Fragment implements OnMapReadyCallback, Ite
         RecyclerView recyclerView = layout.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(layout.getContext()));
-        adapter = new Adapter(activity, animalNames);
+        adapter = new Adapter(activity, activity, animalNames);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
         return layout;
