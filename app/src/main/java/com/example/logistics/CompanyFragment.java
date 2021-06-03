@@ -6,11 +6,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.logistics.recycler.Adapter;
+import com.example.logistics.recycler.ItemClickListener;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -21,10 +26,13 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
-public class CompanyFragment extends Fragment implements OnMapReadyCallback{
+import java.util.ArrayList;
+
+public class CompanyFragment extends Fragment implements OnMapReadyCallback, ItemClickListener {
 
     private MapView mapView;
     private Activity activity;
+    private Adapter adapter;
 
     @Override
     public void onAttach(Context context) {
@@ -42,6 +50,21 @@ public class CompanyFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.company, container, false);
+        // data to populate the RecyclerView with
+        ArrayList<String> animalNames = new ArrayList<>();
+        animalNames.add("Horse");
+        animalNames.add("Cow");
+        animalNames.add("Camel");
+        animalNames.add("Sheep");
+        animalNames.add("Goat");
+
+        // set up the RecyclerView
+        RecyclerView recyclerView = layout.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(layout.getContext()));
+        adapter = new Adapter(activity, animalNames);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
         return layout;
     }
 
@@ -114,4 +137,8 @@ public class CompanyFragment extends Fragment implements OnMapReadyCallback{
     }
 
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(activity, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+    }
 }
