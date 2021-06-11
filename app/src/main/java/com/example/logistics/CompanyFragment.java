@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,6 +66,7 @@ public class CompanyFragment extends Fragment implements OnMapReadyCallback, Ite
         adapter = new Adapter(activity, activity, animalNames);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
         return layout;
     }
 
@@ -75,6 +77,8 @@ public class CompanyFragment extends Fragment implements OnMapReadyCallback, Ite
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        view.findViewById(R.id.fab).setOnClickListener(v -> Utilities.insertFragment((AppCompatActivity)activity, new AddTransportFragment(), "AddCompanyFragment"));
     }
 
     @Override
