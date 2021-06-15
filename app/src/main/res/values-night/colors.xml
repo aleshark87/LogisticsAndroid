@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="backgroundTopbar">@color/black</color>
+    <color name="backgroundFragment">@color/prussian_blue</color>
+    <color name="buttonColor">#6b0504</color>
+</resources>

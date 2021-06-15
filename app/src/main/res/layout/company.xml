@@ -2,7 +2,7 @@
 <ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/middle_blue"
+    android:background="@color/backgroundFragment"
     android:layout_marginTop="55dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

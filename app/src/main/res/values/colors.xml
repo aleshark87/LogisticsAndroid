@@ -11,4 +11,8 @@
     <color name="jet">#312F2F</color>
     <color name="middle_blue">#A6D9F7</color>
     <color name="star_command">#107DBC</color>
+    <color name="prussian_blue">#052538</color>
+    <color name="backgroundTopbar">#A6E7F7</color>
+    <color name="backgroundFragment">@color/middle_blue</color>
+    <color name="buttonColor">@color/middle_blue_green</color>
 </resources>

@@ -22,7 +22,8 @@ public class AddTransportFragment extends Fragment {
     private Activity activity;
     private LocViewModel viewModel;
 
-    //TODO database-viewmodel(carditem)-gui con mappa per addare trasporti
+    //TODO database-viewmodel(carditem)
+    //TODO temi, colore sfondo delle card, colore del bottone submit(c'è già lo style)
 
     @Override
     public void onAttach(@NonNull Context context) {

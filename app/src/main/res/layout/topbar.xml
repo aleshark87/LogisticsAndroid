@@ -10,8 +10,7 @@
         android:layout_height="?attr/actionBarSize"
         app:title="@string/app_name"
         style="@style/Widget.MaterialComponents.Toolbar.Primary"
-        android:backgroundTint="@color/star_command"
-        app:titleTextColor="@color/jet"
+        android:backgroundTint="@color/backgroundTopbar"
         />
 
 </com.google.android.material.appbar.AppBarLayout>

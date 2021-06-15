@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="homepageBt" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:textColor">@color/middle_blue_green</item>
-        <item name="backgroundTint">@color/jet</item>
+    <style name="normalBt" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/buttonColor</item>
+    </style>
+    <style name="submitBt" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/submitButton</item>
     </style>
     <style name="bigLabelJet" parent="TextAppearance.AppCompat.Large">
-        <item name="android:textColor">@color/jet</item>
     </style>
     <style name="smallLabelJet" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/jet</item>
     </style>
 </resources>

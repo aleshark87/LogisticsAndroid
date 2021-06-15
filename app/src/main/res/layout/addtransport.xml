@@ -2,7 +2,7 @@
 <ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/middle_blue"
+    android:background="@color/backgroundFragment"
     android:layout_marginTop="55dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,11 +26,13 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTitle"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/labelTitle"
-            android:layout_marginLeft="20dp">
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="150dp"
+            android:backgroundTint="@color/star_command">
         </com.google.android.material.textfield.TextInputEditText>
 
         <TextView
@@ -66,7 +68,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
             android:text="CHOOSE LOCATION"
-            style="@style/homepageBt">
+            style="@style/normalBt">
         </Button>
 
         <TextView
@@ -102,8 +104,43 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
             android:text="CHOOSE LOCATION"
-            style="@style/homepageBt">
+            style="@style/normalBt">
         </Button>
+        
+        <TextView
+            android:id="@+id/dateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stopLocationButton"
+            android:text="What is the Date ?"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp">
+        </TextView>
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dateLabel"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="150dp"
+            android:inputType="date"
+            android:backgroundTint="@color/star_command">
+        </com.google.android.material.textfield.TextInputEditText>
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextDate"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:text="Submit"
+            android:textSize="20dp">
+        </Button>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
