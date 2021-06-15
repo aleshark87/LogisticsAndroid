@@ -14,19 +14,40 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/cardIMG"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:scaleType="centerCrop"
-            />
+            android:id="@+id/mapImageView">
+        </ImageView>
         <TextView
-            android:id="@+id/cardTV"
+            android:id="@+id/cardTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Text"
-            android:gravity="center">
+            android:text="Title"
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Large">
 
+        </TextView>
+
+        <TextView
+            android:id="@+id/cardDepArr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="Departure: Senigallia, Arrive: Ancona"
+            style="@style/TextAppearance.AppCompat">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cardDate"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="Insered in "
+            style="@style/TextAppearance.AppCompat">
         </TextView>
     </androidx.appcompat.widget.LinearLayoutCompat>
 

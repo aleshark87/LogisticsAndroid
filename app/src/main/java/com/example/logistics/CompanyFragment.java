@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.logistics.recycler.Adapter;
+import com.example.logistics.recycler.CardItem;
 import com.example.logistics.recycler.ItemClickListener;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -28,6 +29,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyFragment extends Fragment implements OnMapReadyCallback, ItemClickListener {
 
@@ -51,19 +53,17 @@ public class CompanyFragment extends Fragment implements OnMapReadyCallback, Ite
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.company, container, false);
-        // data to populate the RecyclerView with
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
 
         // set up the RecyclerView
         RecyclerView recyclerView = layout.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(layout.getContext()));
-        adapter = new Adapter(activity, activity, animalNames);
+        adapter = new Adapter(activity, activity);
+        //TEST
+        List<CardItem> testList = new ArrayList<>();
+        testList.add(new CardItem("cacca", "Titolo1", "Destination:Ancona", "today"));
+        testList.add(new CardItem("cacca", "Titolo2", "Destination:Parigi", "today"));
+        adapter.setData(testList);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 

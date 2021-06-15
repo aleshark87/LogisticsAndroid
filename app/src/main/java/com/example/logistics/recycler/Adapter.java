@@ -2,6 +2,7 @@ package com.example.logistics.recycler;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,20 +13,22 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.logistics.R;
+import com.mapbox.mapboxsdk.Mapbox;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<ViewHolder> {
+public class Adapter extends RecyclerView.Adapter<ViewHolder>  {
 
-    private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Activity activity;
 
+    private List<CardItem> itemsList = new ArrayList<>();
+
     // data is passed into the constructor
-    public Adapter(Activity activity, Context context, List<String> data) {
+    public Adapter(Activity activity, Context context) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
         this.activity = activity;
     }
 
@@ -38,16 +41,18 @@ public class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.getMyTextView().setText(animal);
-        Drawable drawable = ContextCompat.getDrawable(activity, activity.getResources()
-                .getIdentifier("ic_launcher_foreground", "drawable",
-                        activity.getPackageName()));
+        CardItem currentCardItem = itemsList.get(position);
+
+        holder.getTitleTextView().setText(currentCardItem.getTitle());
+        holder.getDestArrTextView().setText(currentCardItem.getDestArr());
+        holder.getDateTextView().setText(currentCardItem.getDate());
+
+        holder.getImgView().setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_launcher_foreground));
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return itemsList.size();
     }
 
     // allows clicks events to be caught
@@ -56,7 +61,12 @@ public class Adapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mData.get(id);
+    public CardItem getItem(int id) {
+        return itemsList.get(id);
+    }
+
+    public void setData(List<CardItem> items){
+        this.itemsList = items;
+        notifyDataSetChanged();
     }
 }

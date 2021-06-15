@@ -7,17 +7,26 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.logistics.R;
+import com.mapbox.mapboxsdk.maps.MapView;
+
+import org.w3c.dom.Text;
+
+import java.util.Map;
 
 public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private TextView myTextView;
-    private ImageView myImageView;
+    private TextView titleTextView;
+    private TextView destArrTextView;
+    private TextView dateTextView;
+    private ImageView imgView;
     private ItemClickListener mClickListener;
 
     ViewHolder(View itemView, ItemClickListener listener) {
         super(itemView);
-        myTextView = itemView.findViewById(R.id.cardTV);
-        myImageView = itemView.findViewById(R.id.cardIMG);
+        titleTextView = itemView.findViewById(R.id.cardTitle);
+        destArrTextView = itemView.findViewById(R.id.cardDepArr);
+        imgView = itemView.findViewById(R.id.mapImageView);
+        dateTextView = itemView.findViewById(R.id.cardDate);
         itemView.setOnClickListener(this);
         mClickListener = listener;
     }
@@ -27,9 +36,13 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
     }
 
-    public TextView getMyTextView(){
-        return this.myTextView;
+    public TextView getTitleTextView(){
+        return this.titleTextView;
     }
 
-    public ImageView getMyImageView() { return  this.myImageView; }
+    public TextView getDestArrTextView() { return this.destArrTextView; }
+
+    public ImageView getImgView() { return this.imgView; }
+
+    public TextView getDateTextView() { return this.dateTextView; }
 }
