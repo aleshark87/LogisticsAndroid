@@ -31,7 +31,7 @@
 
     <Button
         android:id="@+id/companyBt"
-        style="@style/homepageBt"
+        style="@style/normalBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
@@ -43,7 +43,7 @@
 
     <Button
         android:id="@+id/carrierBt"
-        style="@style/homepageBt"
+        style="@style/normalBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -55,7 +55,7 @@
 
     <Button
         android:id="@+id/newCarrierBt"
-        style="@style/homepageBt"
+        style="@style/normalBt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"

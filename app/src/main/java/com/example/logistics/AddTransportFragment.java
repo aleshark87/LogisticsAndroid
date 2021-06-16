@@ -20,10 +20,10 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
 public class AddTransportFragment extends Fragment {
     private Activity activity;
-    private LocViewModel viewModel;
+    private LocViewModel locViewModel;
 
     //TODO database-viewmodel(carditem)
-    //TODO temi, colore sfondo delle card, colore del bottone submit(c'è già lo style)
+    //TODO mappa addTransport
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -42,12 +42,29 @@ public class AddTransportFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //view.findViewById(R.id.selectLoc).setOnClickListener(v -> Utilities.insertFragment((AppCompatActivity)activity, new LocationPickerFragment(), "LocationPickerFragment"));
-        viewModel = new ViewModelProvider(requireActivity()).get(LocViewModel.class);
+        locViewModel = new ViewModelProvider(requireActivity()).get(LocViewModel.class);
 
-        viewModel.getLocation().observe(getViewLifecycleOwner(), item -> {
-            // Perform an action with the latest item data
-            //TextView textView = view.findViewById(R.id.test);
-            //textView.setText(item);
+        locViewModel.getStartLocation().observe((AppCompatActivity)activity, loc -> {
+            TextView tv = view.findViewById(R.id.labelPlaceDeparture);
+            tv.setText(loc);
+        });
+
+        locViewModel.getStopLocation().observe((AppCompatActivity)activity, loc -> {
+            TextView tv = view.findViewById(R.id.labelPlaceArrive);
+            tv.setText(loc);
+        });
+
+        view.findViewById(R.id.startLocationButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.insertFragment((AppCompatActivity)activity, new LocationPickerFragment(true), "LocationPickerFragment");
+            }
+        });
+        view.findViewById(R.id.stopLocationButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.insertFragment((AppCompatActivity)activity, new LocationPickerFragment(false), "LocationPickerFragment");
+            }
         });
     }
 }

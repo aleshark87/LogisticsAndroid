@@ -14,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -65,6 +67,11 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
     private ImageView hoveringMarker;
     private Layer droppedMarkerLayer;
     private LocViewModel viewModel;
+    private boolean startMode;
+
+    public LocationPickerFragment(boolean startMode){
+        this.startMode = startMode;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -202,7 +209,13 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            viewModel.setLocation(locations.get(0).getLocality());
+                            if(startMode){
+                                viewModel.setStartLocation(locations.get(0).getLocality());
+                            }
+                            else{
+                                viewModel.setStopLocation(locations.get(0).getLocality());
+                            }
+
                         } else {
                             Toast toast = Toast.makeText(activity, "Remake your choice!", Toast.LENGTH_SHORT);
                             toast.show();

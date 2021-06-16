@@ -3,9 +3,6 @@
     <style name="normalBt" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:backgroundTint">@color/buttonColor</item>
     </style>
-    <style name="submitBt" parent="TextAppearance.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/submitButton</item>
-    </style>
     <style name="bigLabelJet" parent="TextAppearance.AppCompat.Large">
     </style>
     <style name="smallLabelJet" parent="TextAppearance.AppCompat">

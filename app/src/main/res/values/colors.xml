@@ -15,4 +15,5 @@
     <color name="backgroundTopbar">#A6E7F7</color>
     <color name="backgroundFragment">@color/middle_blue</color>
     <color name="buttonColor">@color/middle_blue_green</color>
+    <color name="cardBackgroundCompany">@color/middle_blue_green</color>
 </resources>

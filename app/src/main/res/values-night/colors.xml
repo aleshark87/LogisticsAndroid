@@ -3,4 +3,5 @@
     <color name="backgroundTopbar">@color/black</color>
     <color name="backgroundFragment">@color/prussian_blue</color>
     <color name="buttonColor">#6b0504</color>
+    <color name="cardBackgroundCompany">@color/purple_700</color>
 </resources>
