@@ -44,7 +44,7 @@ public class Adapter extends RecyclerView.Adapter<ViewHolder>  {
         CardItem currentCardItem = itemsList.get(position);
 
         holder.getTitleTextView().setText(currentCardItem.getTitle());
-        holder.getDestArrTextView().setText(currentCardItem.getDestArr());
+        holder.getDestArrTextView().setText(currentCardItem.getSerializedAddressDestination());
         holder.getDateTextView().setText(currentCardItem.getDate());
 
         holder.getImgView().setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_launcher_foreground));

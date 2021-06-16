@@ -210,10 +210,10 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
                                 e.printStackTrace();
                             }
                             if(startMode){
-                                viewModel.setStartLocation(locations.get(0).getLocality());
+                                viewModel.setStartLocation(locations.get(0));
                             }
                             else{
-                                viewModel.setStopLocation(locations.get(0).getLocality());
+                                viewModel.setStopLocation(locations.get(0));
                             }
 
                         } else {
