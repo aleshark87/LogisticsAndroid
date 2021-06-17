@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_height="match_parent"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/backgroundFragment"
     android:layout_marginTop="55dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -105,41 +104,112 @@
             android:text="CHOOSE LOCATION"
             style="@style/normalBt">
         </Button>
-        
+
         <TextView
             android:id="@+id/dateLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/stopLocationButton"
-            android:text="What is the Date ?"
             style="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp">
-        </TextView>
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextDate"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Choose date and Time"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stopLocationButton"></TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dateButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dateLabel"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="150dp"
-            android:inputType="date"
-            android:backgroundTint="@color/buttonColor">
-        </com.google.android.material.textfield.TextInputEditText>
+            android:layout_marginTop="5dp"
+            android:text="Choose Date"
+            style="@style/normalBt">
+        </com.google.android.material.button.MaterialButton>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/hourButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/normalBt"
+            app:layout_constraintStart_toEndOf="@id/dateButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@id/dateLabel"
+            android:text="choose hour">
+        </com.google.android.material.button.MaterialButton>
+        <TextView
+            android:id="@+id/labelTimeResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hourButton"
+            android:text="Date and time not choosed"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            style="@style/TextAppearance.AppCompat">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/productChooserTv"
+            app:layout_constraintTop_toBottomOf="@id/labelTimeResult"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Which product is carried ?"
+            style="@style/TextAppearance.AppCompat.Medium">
+        </TextView>
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/productChooserTv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="20dp"
+            android:checkedButton="@id/radio1">
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radio1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/buttonColor"
+                android:text="Coal"
+                style="@style/TextAppearance.AppCompat.Medium">
+            </com.google.android.material.radiobutton.MaterialRadioButton>
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radio2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/buttonColor"
+                android:text="Iron"
+                style="@style/TextAppearance.AppCompat.Medium">
+            </com.google.android.material.radiobutton.MaterialRadioButton>
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/radio3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/buttonColor"
+                android:text="Wood"
+                style="@style/TextAppearance.AppCompat.Medium">
+            </com.google.android.material.radiobutton.MaterialRadioButton>
+        </RadioGroup>
 
-        <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/transportMapView"
+        <FrameLayout
+            android:id="@+id/frameMapview"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:layout_constraintTop_toBottomOf="@id/editTextDate"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup"
             app:layout_constraintBottom_toTopOf="@id/submitButton"
-            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="20dp">
-        </com.mapbox.mapboxsdk.maps.MapView>
+            <com.mapbox.mapboxsdk.maps.MapView
+                android:id="@+id/transportMapView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+            </com.mapbox.mapboxsdk.maps.MapView>
+        </FrameLayout>
 
         <Button
             android:id="@+id/submitButton"
@@ -147,7 +217,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/transportMapView"
+            app:layout_constraintTop_toBottomOf="@id/frameMapview"
             android:layout_marginTop="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="20dp"

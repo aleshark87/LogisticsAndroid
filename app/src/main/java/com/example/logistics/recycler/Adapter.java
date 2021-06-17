@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.logistics.R;
+import com.example.logistics.Utilities;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import java.util.ArrayList;
@@ -44,10 +47,22 @@ public class Adapter extends RecyclerView.Adapter<ViewHolder>  {
         CardItem currentCardItem = itemsList.get(position);
 
         holder.getTitleTextView().setText(currentCardItem.getTitle());
-        holder.getDestArrTextView().setText(currentCardItem.getSerializedAddressDestination());
+        holder.getDestArrTextView().setText("Origin: " + currentCardItem.getOriginLocality() +
+                ", Destination: " + currentCardItem.getDestinationLocality());
         holder.getDateTextView().setText(currentCardItem.getDate());
 
-        holder.getImgView().setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_launcher_foreground));
+        String image_path = currentCardItem.getImgResource();
+        if (image_path.contains("ic_")) {
+            Drawable drawable = ContextCompat.getDrawable(activity, activity.getResources()
+                    .getIdentifier(image_path, "drawable",
+                            activity.getPackageName()));
+            holder.getImgView().setImageDrawable(drawable);
+        } else {
+            Bitmap bitmap = Utilities.getImageBitmap(activity, Uri.parse(image_path));
+            if (bitmap != null){
+                holder.getImgView().setImageBitmap(bitmap);
+            }
+        }
     }
 
     @Override

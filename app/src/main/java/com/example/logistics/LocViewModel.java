@@ -1,6 +1,7 @@
 package com.example.logistics;
 
 import android.content.ClipData;
+import android.graphics.Bitmap;
 import android.location.Address;
 
 import androidx.lifecycle.LiveData;

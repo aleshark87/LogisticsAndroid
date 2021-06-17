@@ -82,12 +82,6 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
         cardViewModel.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItem>>() {
             @Override
             public void onChanged(List<CardItem> cardItems) {
-                List<CardItem> deSerializedCardItems = new ArrayList<>();
-                for(CardItem item : cardItems){
-                    Address originAddress = serializator.fromJson(item.getSerializedAddressOrigin(), Address.class);
-                    Address destinationAddress = serializator.fromJson(item.getSerializedAddressDestination(), Address.class);
-                    //System.out.println(item.getSerializedAddressDestination());
-                }
                 adapter.setData(cardItems);
             }
         });

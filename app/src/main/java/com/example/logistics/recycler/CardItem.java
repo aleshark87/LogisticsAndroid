@@ -9,6 +9,8 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
 @Entity(tableName="item")
 public class CardItem {
 
@@ -19,35 +21,34 @@ public class CardItem {
     private String imgResource;
     @ColumnInfo(name="item_title")
     private String title;
-    @ColumnInfo(name="item_addr_origin")
-    private String serializedAddressOrigin;
-    @ColumnInfo(name="item_addr_destination")
-    private String serializedAddressDestination;
+    @ColumnInfo(name="item_origin_lat")
+    private Double originLat;
+    @ColumnInfo(name="item_origin_long")
+    private Double originLong;
+    @ColumnInfo(name="item_destination_lat")
+    private Double destinationLat;
+    @ColumnInfo(name="item_destination_long")
+    private Double destinationLong;
+    @ColumnInfo(name="item_locality_origin")
+    private String originLocality;
+    @ColumnInfo(name="item_locality_destination")
+    private String destinationLocality;
     @ColumnInfo(name="item_date")
     private String date;
-    @Ignore
-    private Address addressOrigin;
-    @Ignore
-    private Address addressDestination;
-    @Ignore
-    private Gson serializer;
 
-    public CardItem(String imgResource, String title, String serializedAddressOrigin, String serializedAddressDestination, String date){
+    public CardItem(String imgResource, String title,
+                    Double originLat, Double originLong, Double destinationLat, Double destinationLong,
+                    String originLocality, String destinationLocality,
+                    String date){
         this.imgResource = imgResource;
         this.title = title;
-        this.serializedAddressOrigin = serializedAddressOrigin;
-        this.serializedAddressDestination = serializedAddressDestination;
         this.date = date;
-    }
-
-    public CardItem(String imgResource, String title, Address origin, Address destination, String date){
-        this.imgResource = imgResource;
-        this.title = title;
-        this.addressOrigin = origin;
-        this.addressDestination = destination;
-        this.date = date;
-        this.serializedAddressOrigin = serializer.toJson(origin);
-        this.serializedAddressDestination = serializer.toJson(destination);
+        this.originLat = originLat;
+        this.originLong = originLong;
+        this.destinationLat = destinationLat;
+        this.destinationLong = destinationLong;
+        this.originLocality = originLocality;
+        this.destinationLocality = destinationLocality;
     }
 
     public String getImgResource() {
@@ -62,20 +63,8 @@ public class CardItem {
         return title;
     }
 
-    public Address getAddressOrigin() { return addressOrigin; }
-
-    public Address getAddressDestination() { return addressDestination; }
-
     public int getId() {
         return id;
-    }
-
-    public String getSerializedAddressOrigin() {
-        return serializedAddressOrigin;
-    }
-
-    public String getSerializedAddressDestination() {
-        return serializedAddressDestination;
     }
 
     public void setId(int id) {
@@ -90,15 +79,55 @@ public class CardItem {
         this.title = title;
     }
 
-    public void setSerializedAddressOrigin(String serializedAddressOrigin) {
-        this.serializedAddressOrigin = serializedAddressOrigin;
-    }
-
-    public void setSerializedAddressDestination(String serializedAddressDestination) {
-        this.serializedAddressDestination = serializedAddressDestination;
-    }
-
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Double getOriginLat() {
+        return originLat;
+    }
+
+    public void setOriginLat(Double originLat) {
+        this.originLat = originLat;
+    }
+
+    public Double getOriginLong() {
+        return originLong;
+    }
+
+    public void setOriginLong(Double originLong) {
+        this.originLong = originLong;
+    }
+
+    public Double getDestinationLat() {
+        return destinationLat;
+    }
+
+    public void setDestinationLat(Double destinationLat) {
+        this.destinationLat = destinationLat;
+    }
+
+    public Double getDestinationLong() {
+        return destinationLong;
+    }
+
+    public void setDestinationLong(Double destinationLong) {
+        this.destinationLong = destinationLong;
+    }
+
+    public String getOriginLocality() {
+        return originLocality;
+    }
+
+    public void setOriginLocality(String originLocality) {
+        this.originLocality = originLocality;
+    }
+
+    public String getDestinationLocality() {
+        return destinationLocality;
+    }
+
+    public void setDestinationLocality(String destinationLocality) {
+        this.destinationLocality = destinationLocality;
     }
 }

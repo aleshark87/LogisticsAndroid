@@ -16,4 +16,5 @@
     <color name="backgroundFragment">@color/middle_blue</color>
     <color name="buttonColor">@color/middle_blue_green</color>
     <color name="cardBackgroundCompany">@color/middle_blue_green</color>
+    <color name="datePicker">@color/middle_blue_green</color>
 </resources>

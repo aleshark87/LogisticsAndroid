@@ -1,15 +1,26 @@
 package com.example.logistics;
 
 import android.app.Activity;
+import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Address;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,8 +31,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.logistics.recycler.CardItem;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.Gson;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -38,14 +52,28 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.snapshotter.MapSnapshot;
+import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter;
+import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,14 +90,14 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 public class AddTransportFragment extends Fragment implements OnMapReadyCallback {
-    private Activity activity;
-    private LocViewModel locViewModel;
-    private MapView mapView;
     private static final String ROUTE_LAYER_ID = "route-layer-id";
     private static final String ROUTE_SOURCE_ID = "route-source-id";
     private static final String ICON_LAYER_ID = "icon-layer-id";
     private static final String ICON_SOURCE_ID = "icon-source-id";
     private static final String RED_PIN_ICON_ID = "red-pin-icon-id";
+    private Activity activity;
+    private LocViewModel locViewModel;
+    private MapView mapView;
     private DirectionsRoute currentRoute;
     private MapboxDirections client;
     private Point origin;
@@ -77,13 +105,14 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private Address originAddress;
     private Address destinationAddress;
     private TextInputEditText titleEdit;
-    private TextInputEditText dateEdit;
-    private Gson serializer = new Gson();
+    private String formattedDate;
 
-    //TODO check geocoder lat long
-    //TODO salvare bitmap snapshot
-    //TODO capire metodo migliore per salvare Address su room
-    //idee : salva lat e long e poi riusa il geocoder. salva lat long e località e non lo usi più
+    //TODO addare ora su database(anche insieme alla data)
+    //TODO addare selezionatore quantità prodotto
+    //TODO addare prodotto-quantità su database
+    //TODO check geocoder lat long(se uno sceglie il mare(latlong troppo diversa da quella scelta)
+    //TODO sistemare quando si chiede il permesso della posizione
+
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -108,25 +137,75 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         titleEdit = view.findViewById(R.id.editTitle);
-        dateEdit = view.findViewById(R.id.editTextDate);
         locViewModel = new ViewModelProvider(requireActivity()).get(LocViewModel.class);
         setLocationListeners(view);
         CardViewModel cardViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModel.class);
         mapView = view.findViewById(R.id.transportMapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        Button dateButton = view.findViewById(R.id.dateButton);
+        Button timeButton = view.findViewById(R.id.hourButton);
+        TextView resultDate = view.findViewById(R.id.labelTimeResult);
+        setDateButtonListeners(dateButton, timeButton, resultDate);
         view.findViewById(R.id.submitButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String titleText = titleEdit.getText().toString();
-                String dateText = dateEdit.getText().toString();
-                if(originAddress != null && destinationAddress != null && !titleText.matches("") && !dateText.matches("")) {
-                    String serOriginAddr = serializer.toJson(originAddress);
-                    String serDestAddr = serializer.toJson(destinationAddress);
-                    cardViewModel.addCardItem(new CardItem("immagine", titleEdit.getText().toString(), serOriginAddr, serDestAddr, dateEdit.getText().toString()));
-                    titleEdit.getText().clear(); dateEdit.getText().clear();
+                if(originAddress != null && destinationAddress != null && !titleText.matches("") && !resultDate.getText().equals("Date and time not choosed")) {
+                    cardViewModel.addCardItem(
+                            new CardItem("imageUri", titleText,
+                                    originAddress.getLatitude(), originAddress.getLongitude(),
+                                    destinationAddress.getLatitude(), destinationAddress.getLongitude(),
+                                    originAddress.getLocality(), destinationAddress.getLocality(),
+                                    formattedDate));
+                    titleEdit.getText().clear();
                     Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
                 }
+                else{
+                    Toast.makeText(activity, "You are missing some fields.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void setDateButtonListeners(Button dateButton, Button timeButton, TextView resultDateView){
+        MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setTheme(R.style.DatePicker)
+                .build();
+        datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Object selection) {
+                Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                utc.setTimeInMillis((Long)selection);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                formattedDate = format.format(utc.getTime());
+                resultDateView.setText(formattedDate);
+            }
+        });
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePicker.show(getParentFragmentManager(), "tag");
+            }
+        });
+        MaterialTimePicker timePicker =
+                new MaterialTimePicker.Builder()
+                        .setTimeFormat(TimeFormat.CLOCK_12H)
+                        .setHour(12)
+                        .setMinute(10)
+                        .setTitleText("Select departure time")
+                        .build();
+        timeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePicker.show(getParentFragmentManager(), "tag");
+            }
+        });
+        timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -173,7 +252,6 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onStop() {
         super.onStop();
-
         mapView.onStop();
     }
 
@@ -262,10 +340,9 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                 lineColor(Color.parseColor("#009688"))
         );
         loadedMapStyle.addLayer(routeLayer);
-
 // Add the red marker icon image to the map
-        loadedMapStyle.addImage(RED_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(
-                getResources().getDrawable(R.drawable.marker_red)));
+        loadedMapStyle.addImage(RED_PIN_ICON_ID, Objects.requireNonNull(BitmapUtils.getBitmapFromDrawable(
+                getResources().getDrawable(R.drawable.marker_red))));
 
 // Add the red marker icon SymbolLayer to the map
         loadedMapStyle.addLayer(new SymbolLayer(ICON_LAYER_ID, ICON_SOURCE_ID).withProperties(
@@ -296,29 +373,26 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
             public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
                 // You can get the generic HTTP info about the response
                 if (response.body() == null) {
-                    //Timber.e("No routes found, make sure you set the right user and access token.");
                     return;
                 } else if (response.body().routes().size() < 1) {
-                    //Timber.e("No routes found");
                     return;
                 }
 
-// Get the directions route
+                // Get the directions route
                 currentRoute = response.body().routes().get(0);
 
-// Make a toast which displays the route's distance
+                // Make a toast which displays the route's distance
                 Toast.makeText(activity, Double.toString(currentRoute.distance()), Toast.LENGTH_SHORT).show();
 
                 if (mapboxMap != null) {
                     mapboxMap.getStyle(new Style.OnStyleLoaded() {
                         @Override
                         public void onStyleLoaded(@NonNull Style style) {
-
-// Retrieve and update the source designated for showing the directions route
+                            // Retrieve and update the source designated for showing the directions route
                             GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
 
-// Create a LineString with the directions route's geometry and
-// reset the GeoJSON source for the route LineLayer source
+                            // Create a LineString with the directions route's geometry and
+                            // reset the GeoJSON source for the route LineLayer source
                             if (source != null) {
                                 source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
                             }

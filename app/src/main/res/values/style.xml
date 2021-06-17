@@ -7,4 +7,10 @@
     </style>
     <style name="smallLabelJet" parent="TextAppearance.AppCompat">
     </style>
+    <style name="DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/datePicker</item>
+    </style>
+    <style name="MyTimePickerDialogStyle" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="backgroundColor">@color/black</item>
+    </style>
 </resources>
