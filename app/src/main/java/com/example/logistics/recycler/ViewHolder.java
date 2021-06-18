@@ -18,6 +18,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView titleTextView;
     private TextView destArrTextView;
     private TextView dateTextView;
+    private TextView quantityProductTv;
     private ImageView imgView;
     private ItemClickListener mClickListener;
 
@@ -27,6 +28,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         destArrTextView = itemView.findViewById(R.id.cardDepArr);
         imgView = itemView.findViewById(R.id.mapImageView);
         dateTextView = itemView.findViewById(R.id.cardDate);
+        quantityProductTv = itemView.findViewById(R.id.productQuantityTVcard);
         itemView.setOnClickListener(this);
         mClickListener = listener;
     }
@@ -45,4 +47,6 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     public ImageView getImgView() { return this.imgView; }
 
     public TextView getDateTextView() { return this.dateTextView; }
+
+    public TextView getQuantityProductTv(){ return this.quantityProductTv; }
 }

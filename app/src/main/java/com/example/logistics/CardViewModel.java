@@ -20,7 +20,7 @@ public class CardViewModel extends AndroidViewModel {
         repository = new CardItemRepo(application);
         cardItems = repository.getCardItemList();
         /*for db cleaning*/
-        repository.nukeDb();
+        //repository.nukeDb();
     }
 
     public LiveData<List<CardItem>> getCardItems() {

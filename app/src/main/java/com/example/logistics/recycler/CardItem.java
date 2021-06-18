@@ -1,15 +1,8 @@
 package com.example.logistics.recycler;
 
-import android.location.Address;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-
-import com.google.gson.Gson;
-
-import java.util.List;
 
 @Entity(tableName="item")
 public class CardItem {
@@ -18,7 +11,7 @@ public class CardItem {
     @ColumnInfo(name="item_id")
     private int id;
     @ColumnInfo(name="item_image")
-    private String imgResource;
+    private int imgResource;
     @ColumnInfo(name="item_title")
     private String title;
     @ColumnInfo(name="item_origin_lat")
@@ -35,11 +28,15 @@ public class CardItem {
     private String destinationLocality;
     @ColumnInfo(name="item_date")
     private String date;
+    @ColumnInfo(name="product_type")
+    private String productType;
+    @ColumnInfo(name="item_product_quantity")
+    private int quantityKg;
 
-    public CardItem(String imgResource, String title,
+    public CardItem(int imgResource, String title,
                     Double originLat, Double originLong, Double destinationLat, Double destinationLong,
                     String originLocality, String destinationLocality,
-                    String date){
+                    String date, String productType, int quantityKg){
         this.imgResource = imgResource;
         this.title = title;
         this.date = date;
@@ -49,9 +46,27 @@ public class CardItem {
         this.destinationLong = destinationLong;
         this.originLocality = originLocality;
         this.destinationLocality = destinationLocality;
+        this.productType = productType;
+        this.quantityKg = quantityKg;
     }
 
-    public String getImgResource() {
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    public int getQuantityKg() {
+        return quantityKg;
+    }
+
+    public void setQuantityKg(int quantityKg) {
+        this.quantityKg = quantityKg;
+    }
+
+    public int getImgResource() {
         return imgResource;
     }
 
@@ -71,7 +86,7 @@ public class CardItem {
         this.id = id;
     }
 
-    public void setImgResource(String imgResource) {
+    public void setImgResource(int imgResource) {
         this.imgResource = imgResource;
     }
 

@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -97,6 +99,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private static final String RED_PIN_ICON_ID = "red-pin-icon-id";
     private Activity activity;
     private LocViewModel locViewModel;
+    private RadioGroup radioGroup;
     private MapView mapView;
     private DirectionsRoute currentRoute;
     private MapboxDirections client;
@@ -105,11 +108,15 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private Address originAddress;
     private Address destinationAddress;
     private TextInputEditText titleEdit;
+    private TextInputEditText quantityEdit;
     private String formattedDate;
+    private String formattedTime;
+    private boolean dateSet = false;
+    private boolean timeSet = false;
 
-    //TODO addare ora su database(anche insieme alla data)
-    //TODO addare selezionatore quantità prodotto
-    //TODO addare prodotto-quantità su database
+    //TODO pagina dettaglo card(con mappa)
+    //TODO autisti(nuovo autista)
+    //TODO supermappa filtrata azienda(per merce, per autista, per data)
     //TODO check geocoder lat long(se uno sceglie il mare(latlong troppo diversa da quella scelta)
     //TODO sistemare quando si chiede il permesso della posizione
 
@@ -137,6 +144,8 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         titleEdit = view.findViewById(R.id.editTitle);
+        quantityEdit = view.findViewById(R.id.quantityEditText);
+        radioGroup = view.findViewById(R.id.radioGroup);
         locViewModel = new ViewModelProvider(requireActivity()).get(LocViewModel.class);
         setLocationListeners(view);
         CardViewModel cardViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModel.class);
@@ -151,13 +160,31 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 String titleText = titleEdit.getText().toString();
-                if(originAddress != null && destinationAddress != null && !titleText.matches("") && !resultDate.getText().equals("Date and time not choosed")) {
+                String quantityText = quantityEdit.getText().toString();
+                if(originAddress != null && destinationAddress != null && !titleText.matches("") && !quantityText.matches("") && timeSet && dateSet) {
+                    // get selected radio button from radioGroup
+                    int selectedId = radioGroup.getCheckedRadioButtonId();
+                    // find the radiobutton by returned id
+                    RadioButton radioButton = (RadioButton) view.findViewById(selectedId);
+                    int photoId = R.drawable.carbone_710x355;
+                    String productType = "Coal";
+                    if(radioButton.getText().toString().matches("Iron")){
+                        photoId = R.drawable.iron;
+                        productType = "Iron";
+                    }
+                    else{
+                        if(radioButton.getText().toString().matches("Wood")){
+                            photoId = R.drawable.wood;
+                            productType = "Wood";
+                        }
+                    }
                     cardViewModel.addCardItem(
-                            new CardItem("imageUri", titleText,
+                            new CardItem(photoId, titleText,
                                     originAddress.getLatitude(), originAddress.getLongitude(),
                                     destinationAddress.getLatitude(), destinationAddress.getLongitude(),
                                     originAddress.getLocality(), destinationAddress.getLocality(),
-                                    formattedDate));
+                                    formattedDate + ", " + formattedTime,
+                                    productType, Integer.parseInt(quantityText)));
                     titleEdit.getText().clear();
                     Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
                 }
@@ -180,7 +207,13 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                 utc.setTimeInMillis((Long)selection);
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 formattedDate = format.format(utc.getTime());
-                resultDateView.setText(formattedDate);
+                dateSet = true;
+                if(timeSet){
+                    resultDateView.setText("Date set " + formattedDate + ", Time set " + formattedTime);
+                }
+                else{
+                    resultDateView.setText("Date set " + formattedDate + ", Time not set");
+                }
             }
         });
         dateButton.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +238,14 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
         timePicker.addOnPositiveButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                timeSet = true;
+                formattedTime = timePicker.getHour() + ":" + timePicker.getMinute();
+                if(dateSet){
+                    resultDateView.setText("Date set " + formattedDate + ", Time set " + formattedTime);
+                }
+                else{
+                    resultDateView.setText("Date not set, Time set " + formattedTime);
+                }
             }
         });
     }
