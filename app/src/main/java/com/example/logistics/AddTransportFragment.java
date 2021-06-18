@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.logistics.recycler.CardItem;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -114,7 +115,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private boolean dateSet = false;
     private boolean timeSet = false;
 
-    //TODO pagina dettaglo card(con mappa)
+    //TODO rimuovere dal db(fare metodo su DAO) le card vecchie
     //TODO autisti(nuovo autista)
     //TODO supermappa filtrata azienda(per merce, per autista, per data)
     //TODO check geocoder lat long(se uno sceglie il mare(latlong troppo diversa da quella scelta)
@@ -143,6 +144,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Utilities.setUpToolbar((AppCompatActivity) activity, "Add Transport");
         titleEdit = view.findViewById(R.id.editTitle);
         quantityEdit = view.findViewById(R.id.quantityEditText);
         radioGroup = view.findViewById(R.id.radioGroup);

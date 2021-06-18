@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.logistics.recycler.Adapter;
 import com.example.logistics.recycler.CardItem;
 import com.example.logistics.recycler.ItemClickListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.gson.Gson;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -75,8 +76,8 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Utilities.setUpToolbar((AppCompatActivity) activity, "Company");
         cardViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModel.class);
-
         view.findViewById(R.id.fab).setOnClickListener(v -> Utilities.insertFragment((AppCompatActivity)activity, new AddTransportFragment(), "AddCompanyFragment"));
 
         cardViewModel.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItem>>() {
@@ -90,5 +91,6 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(activity, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapter.getItem(position)), "CardMapViewFragment");
     }
 }

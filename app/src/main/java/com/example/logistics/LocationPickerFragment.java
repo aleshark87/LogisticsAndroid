@@ -25,6 +25,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Point;
@@ -95,6 +96,7 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Utilities.setUpToolbar((AppCompatActivity) activity, "Location Picker");
         // Initialize the mapboxMap view
         selectLocationButton = view.findViewById(R.id.select_location_button);
         selectLocationButton.setBackgroundColor(

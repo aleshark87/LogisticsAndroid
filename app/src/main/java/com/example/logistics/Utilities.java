@@ -7,13 +7,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import java.io.InputStream;
 
 public class Utilities {
-    static void insertFragment(AppCompatActivity activity, Fragment fragment, String tag){
+    public static void insertFragment(AppCompatActivity activity, Fragment fragment, String tag){
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 
         transaction.replace(R.id.fragment_container_view, fragment, tag);
@@ -37,5 +38,10 @@ public class Utilities {
             e.printStackTrace();
         }
         return null;
+    }
+
+    static void setUpToolbar(AppCompatActivity activity, String title) {
+        Toolbar toolbar = activity.findViewById(R.id.topAppBar);
+        toolbar.setTitle(title);
     }
 }

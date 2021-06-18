@@ -1,12 +1,17 @@
 package com.example.logistics.recycler;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.logistics.CardMapViewFragment;
+import com.example.logistics.HomeFragment;
 import com.example.logistics.R;
+import com.example.logistics.Utilities;
 import com.mapbox.mapboxsdk.maps.MapView;
 
 import org.w3c.dom.Text;

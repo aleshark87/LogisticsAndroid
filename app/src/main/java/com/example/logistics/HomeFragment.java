@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.appbar.MaterialToolbar;
+
 public class HomeFragment extends Fragment {
 
     @Nullable
@@ -24,6 +26,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final Activity activity = getActivity();
         if(activity != null) {
+            Utilities.setUpToolbar((AppCompatActivity) activity, "Logistics");
             view.findViewById(R.id.companyBt).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
