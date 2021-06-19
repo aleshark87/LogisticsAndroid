@@ -115,8 +115,8 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private boolean dateSet = false;
     private boolean timeSet = false;
 
-    //TODO rimuovere dal db(fare metodo su DAO) le card vecchie
-    //TODO autisti(nuovo autista)
+    //TODO temare timepicker
+    //TODO autisti(recyclerview con lista trasporti disponibili(nuovo autista)
     //TODO supermappa filtrata azienda(per merce, per autista, per data)
     //TODO check geocoder lat long(se uno sceglie il mare(latlong troppo diversa da quella scelta)
     //TODO sistemare quando si chiede il permesso della posizione
@@ -422,9 +422,6 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
 
                 // Get the directions route
                 currentRoute = response.body().routes().get(0);
-
-                // Make a toast which displays the route's distance
-                Toast.makeText(activity, Double.toString(currentRoute.distance()), Toast.LENGTH_SHORT).show();
 
                 if (mapboxMap != null) {
                     mapboxMap.getStyle(new Style.OnStyleLoaded() {

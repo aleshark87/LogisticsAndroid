@@ -25,4 +25,7 @@ public interface CardItemDAO {
     @Query("DELETE FROM item")
     public void nukeTable();
 
+    @Query("DELETE from item WHERE item_id=:item_id")
+    public void deleteItem(int item_id);
+
 }

@@ -3,8 +3,8 @@
     <string name="welcomeMsg">Welcome to Logistics!</string>
     <string name="captionMsg">Here you can be:</string>
     <string name="companyBtMsg">Company</string>
-    <string name="carrierBtMsg">Carrier</string>
-    <string name="newCarrierBtMsg">New Carrier</string>
+    <string name="carrierBtMsg">Driver</string>
+    <string name="newCarrierBtMsg">New Driver</string>
     <string name="mapbox_access_token">pk.eyJ1IjoiYWxlc2hhcms4NyIsImEiOiJja29pZjlmM3EwMG5vMnZxdzFtYjdmaDNuIn0.TTAAoD3BVjAKnrRLmtCG9w</string>
-    <string name="submit">add_company</string>
+    <string name="submit">Submit</string>
 </resources>

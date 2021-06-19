@@ -43,7 +43,7 @@ public class HomeFragment extends Fragment {
             view.findViewById(R.id.newCarrierBt).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //newCarrierBt
+                    Utilities.insertFragment((AppCompatActivity)activity, new NewDriverFragment(), "NewDriverFragment");
                 }
             });
         }

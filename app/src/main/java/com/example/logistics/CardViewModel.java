@@ -34,4 +34,6 @@ public class CardViewModel extends AndroidViewModel {
     public void addCardItem(CardItem item){
         repository.addCardItem(item);
     }
+
+    public void removeCardItem(int cardItemId) { repository.deleteItem(cardItemId); }
 }

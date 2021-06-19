@@ -43,4 +43,13 @@ public class CardItemRepo {
             }
         });
     }
+
+    public void deleteItem(int card_id){
+        CardItemDb.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                cardItemDAO.deleteItem(card_id);
+            }
+        });
+    }
 }
