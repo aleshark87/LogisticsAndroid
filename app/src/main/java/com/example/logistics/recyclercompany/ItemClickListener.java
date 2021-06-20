@@ -1,4 +1,4 @@
-package com.example.logistics.recycler;
+package com.example.logistics.recyclercompany;
 
 import android.view.View;
 

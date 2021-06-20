@@ -1,4 +1,4 @@
-package com.example.logistics;
+package com.example.logistics.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,7 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.material.appbar.MaterialToolbar;
+import com.example.logistics.R;
+import com.example.logistics.Utilities;
 
 public class HomeFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package com.example.logistics;
+package com.example.logistics.viewmodel;
 
 import android.content.ClipData;
 import android.graphics.Bitmap;

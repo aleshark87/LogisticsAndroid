@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.logistics.fragment.HomeFragment;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String FRAGMENT_TAG_HOME = "HomeFragment";

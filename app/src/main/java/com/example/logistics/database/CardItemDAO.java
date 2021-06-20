@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.example.logistics.recycler.CardItem;
+import com.example.logistics.recyclercompany.CardItemCompany;
 
 import java.util.List;
 
@@ -16,16 +16,16 @@ public interface CardItemDAO {
     // The selected on conflict strategy ignores a new CardItem
     // if it's exactly the same as one already in the list.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void addCardItem(CardItem CardItem);
+    void addCardItemCompany(CardItemCompany CardItemCompany);
 
     @Transaction
-    @Query("SELECT * from item ORDER BY item_id DESC")
-    LiveData<List<CardItem>> getCardItems();
+    @Query("SELECT * from card_company ORDER BY item_id DESC")
+    LiveData<List<CardItemCompany>> getCardItemsCompany();
 
-    @Query("DELETE FROM item")
-    public void nukeTable();
+    @Query("DELETE FROM card_company")
+    public void nukeTableCompany();
 
-    @Query("DELETE from item WHERE item_id=:item_id")
-    public void deleteItem(int item_id);
+    @Query("DELETE from card_company WHERE item_id=:item_id")
+    public void deleteItemCompany(int item_id);
 
 }

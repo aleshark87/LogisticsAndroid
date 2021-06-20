@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.logistics.fragment.HomeFragment;
+
 import java.io.InputStream;
 
 public class Utilities {
@@ -40,7 +42,7 @@ public class Utilities {
         return null;
     }
 
-    static void setUpToolbar(AppCompatActivity activity, String title) {
+    public static void setUpToolbar(AppCompatActivity activity, String title) {
         Toolbar toolbar = activity.findViewById(R.id.topAppBar);
         toolbar.setTitle(title);
     }

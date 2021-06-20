@@ -1,4 +1,4 @@
-package com.example.logistics;
+package com.example.logistics.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,7 +17,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.logistics.recycler.CardItem;
+import com.example.logistics.R;
+import com.example.logistics.Utilities;
+import com.example.logistics.recyclercompany.CardItemCompany;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -70,12 +72,12 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
     private static final String ICON_SOURCE_ID = "icon-source-id";
     private static final String RED_PIN_ICON_ID = "red-pin-icon-id";
     private Activity activity;
-    private CardItem cardItem;
+    private CardItemCompany cardItemCompany;
     private MapView mapView;
     private TextView informationTV;
 
-    public CardMapViewFragment(CardItem item){
-        this.cardItem = item;
+    public CardMapViewFragment(CardItemCompany item){
+        this.cardItemCompany = item;
     }
 
     @Override
@@ -112,11 +114,11 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                Point origin = Point.fromLngLat(cardItem.getOriginLong(), cardItem.getOriginLat());
-                Point destination = Point.fromLngLat(cardItem.getDestinationLong(), cardItem.getDestinationLat());
+                Point origin = Point.fromLngLat(cardItemCompany.getOriginLong(), cardItemCompany.getOriginLat());
+                Point destination = Point.fromLngLat(cardItemCompany.getDestinationLong(), cardItemCompany.getDestinationLat());
                 LatLngBounds latLngBounds = new LatLngBounds.Builder()
-                        .include(new LatLng(cardItem.getOriginLat(), cardItem.getOriginLong()))
-                        .include(new LatLng(cardItem.getDestinationLat(), cardItem.getDestinationLong()))
+                        .include(new LatLng(cardItemCompany.getOriginLat(), cardItemCompany.getOriginLong()))
+                        .include(new LatLng(cardItemCompany.getDestinationLat(), cardItemCompany.getDestinationLong()))
                         .build();
 
                 mapboxMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 150));
@@ -132,8 +134,8 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         loadedMapStyle.addSource(new GeoJsonSource(ROUTE_SOURCE_ID));
 
         GeoJsonSource iconGeoJsonSource = new GeoJsonSource(ICON_SOURCE_ID, FeatureCollection.fromFeatures(new Feature[] {
-                Feature.fromGeometry(Point.fromLngLat(cardItem.getOriginLong(), cardItem.getOriginLat())),
-                Feature.fromGeometry(Point.fromLngLat(cardItem.getDestinationLong(), cardItem.getDestinationLat()))}));
+                Feature.fromGeometry(Point.fromLngLat(cardItemCompany.getOriginLong(), cardItemCompany.getOriginLat())),
+                Feature.fromGeometry(Point.fromLngLat(cardItemCompany.getDestinationLong(), cardItemCompany.getDestinationLat()))}));
         loadedMapStyle.addSource(iconGeoJsonSource);
     }
 
@@ -213,7 +215,7 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         List<String> timeRoundedResults = timeRounder(route.duration());
         int numberOfHours = Integer.parseInt(timeRoundedResults.get(1).split(":")[0]);
         int numberOfMinutes = Integer.parseInt(timeRoundedResults.get(1).split(":")[1]);
-        String dateStart = cardItem.getDate().split(" ")[1];
+        String dateStart = cardItemCompany.getDate().split(" ")[1];
         Log.d("tag", dateStart.split(":")[1]);
         int startHours = Integer.parseInt(dateStart.split(":")[0]);
         int startMinutes = Integer.parseInt(dateStart.split(":")[1]);

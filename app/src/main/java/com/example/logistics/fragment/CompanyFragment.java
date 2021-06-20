@@ -1,8 +1,7 @@
-package com.example.logistics;
+package com.example.logistics.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.location.Address;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,30 +19,23 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.logistics.recycler.Adapter;
-import com.example.logistics.recycler.CardItem;
-import com.example.logistics.recycler.ItemClickListener;
-import com.google.android.material.appbar.MaterialToolbar;
+import com.example.logistics.viewmodel.CardViewModelCompany;
+import com.example.logistics.R;
+import com.example.logistics.Utilities;
+import com.example.logistics.recyclercompany.AdapterCompany;
+import com.example.logistics.recyclercompany.CardItemCompany;
+import com.example.logistics.recyclercompany.ItemClickListener;
 import com.google.gson.Gson;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.MarkerOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
-import com.mapbox.mapboxsdk.maps.Style;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyFragment extends Fragment implements ItemClickListener {
 
     private MapView mapView;
     private Activity activity;
-    private Adapter adapter;
-    private CardViewModel cardViewModel;
+    private AdapterCompany adapterCompany;
+    private CardViewModelCompany cardViewModelCompany;
     private Gson serializator = new Gson();
 
     @Override
@@ -66,9 +58,9 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
         RecyclerView recyclerView = layout.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(layout.getContext()));
-        adapter = new Adapter(activity, activity);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
+        adapterCompany = new AdapterCompany(activity, activity);
+        adapterCompany.setClickListener(this);
+        recyclerView.setAdapter(adapterCompany);
 
         return layout;
     }
@@ -77,20 +69,20 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Utilities.setUpToolbar((AppCompatActivity) activity, "Company");
-        cardViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModel.class);
+        cardViewModelCompany = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModelCompany.class);
         view.findViewById(R.id.fab).setOnClickListener(v -> Utilities.insertFragment((AppCompatActivity)activity, new AddTransportFragment(), "AddCompanyFragment"));
 
-        cardViewModel.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItem>>() {
+        cardViewModelCompany.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItemCompany>>() {
             @Override
-            public void onChanged(List<CardItem> cardItems) {
-                adapter.setData(cardItems);
+            public void onChanged(List<CardItemCompany> cardItemCompanies) {
+                adapterCompany.setData(cardItemCompanies);
             }
         });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(activity, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapter.getItem(position)), "CardMapViewFragment");
+        Toast.makeText(activity, "You clicked " + adapterCompany.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position)), "CardMapViewFragment");
     }
 }

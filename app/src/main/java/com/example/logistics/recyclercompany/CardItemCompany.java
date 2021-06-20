@@ -1,11 +1,11 @@
-package com.example.logistics.recycler;
+package com.example.logistics.recyclercompany;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName="item")
-public class CardItem {
+@Entity(tableName="card_company")
+public class CardItemCompany {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="item_id")
@@ -33,10 +33,10 @@ public class CardItem {
     @ColumnInfo(name="item_product_quantity")
     private int quantityKg;
 
-    public CardItem(int imgResource, String title,
-                    Double originLat, Double originLong, Double destinationLat, Double destinationLong,
-                    String originLocality, String destinationLocality,
-                    String date, String productType, int quantityKg){
+    public CardItemCompany(int imgResource, String title,
+                           Double originLat, Double originLong, Double destinationLat, Double destinationLong,
+                           String originLocality, String destinationLocality,
+                           String date, String productType, int quantityKg){
         this.imgResource = imgResource;
         this.title = title;
         this.date = date;

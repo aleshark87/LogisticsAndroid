@@ -1,24 +1,14 @@
-package com.example.logistics.recycler;
+package com.example.logistics.recyclercompany;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.logistics.CardMapViewFragment;
-import com.example.logistics.HomeFragment;
 import com.example.logistics.R;
-import com.example.logistics.Utilities;
-import com.mapbox.mapboxsdk.maps.MapView;
 
-import org.w3c.dom.Text;
-
-import java.util.Map;
-
-public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ViewHolderCompany extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private TextView titleTextView;
     private TextView destArrTextView;
@@ -27,7 +17,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private ImageView imgView;
     private ItemClickListener mClickListener;
 
-    ViewHolder(View itemView, ItemClickListener listener) {
+    ViewHolderCompany(View itemView, ItemClickListener listener) {
         super(itemView);
         titleTextView = itemView.findViewById(R.id.cardTitle);
         destArrTextView = itemView.findViewById(R.id.cardDepArr);

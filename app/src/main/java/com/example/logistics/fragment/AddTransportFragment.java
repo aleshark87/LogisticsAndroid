@@ -1,28 +1,17 @@
-package com.example.logistics;
+package com.example.logistics.fragment;
 
 import android.app.Activity;
-import android.app.TimePickerDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Address;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,8 +21,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.example.logistics.recycler.CardItem;
-import com.google.android.material.appbar.MaterialToolbar;
+import com.example.logistics.viewmodel.CardViewModelCompany;
+import com.example.logistics.viewmodel.LocViewModel;
+import com.example.logistics.R;
+import com.example.logistics.Utilities;
+import com.example.logistics.recyclercompany.CardItemCompany;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -55,28 +47,17 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.snapshotter.MapSnapshot;
-import com.mapbox.mapboxsdk.snapshotter.MapSnapshotter;
-import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -150,7 +131,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
         radioGroup = view.findViewById(R.id.radioGroup);
         locViewModel = new ViewModelProvider(requireActivity()).get(LocViewModel.class);
         setLocationListeners(view);
-        CardViewModel cardViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModel.class);
+        CardViewModelCompany cardViewModelCompany = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModelCompany.class);
         mapView = view.findViewById(R.id.transportMapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -180,8 +161,8 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                             productType = "Wood";
                         }
                     }
-                    cardViewModel.addCardItem(
-                            new CardItem(photoId, titleText,
+                    cardViewModelCompany.addCardItem(
+                            new CardItemCompany(photoId, titleText,
                                     originAddress.getLatitude(), originAddress.getLongitude(),
                                     destinationAddress.getLatitude(), destinationAddress.getLongitude(),
                                     originAddress.getLocality(), destinationAddress.getLocality(),
