@@ -13,4 +13,11 @@
     <style name="MyTimePickerDialogStyle" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="backgroundColor">@color/black</item>
     </style>
+
+    <style name="MaterialAlertDialog" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="colorSurface">@color/backgroundFragment</item>
+        <item name="colorPrimary">@color/dialog</item>
+    </style>
+
+
 </resources>

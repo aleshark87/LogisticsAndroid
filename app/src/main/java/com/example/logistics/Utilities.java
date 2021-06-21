@@ -16,6 +16,9 @@ import com.example.logistics.fragment.HomeFragment;
 import java.io.InputStream;
 
 public class Utilities {
+
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
+
     public static void insertFragment(AppCompatActivity activity, Fragment fragment, String tag){
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
 

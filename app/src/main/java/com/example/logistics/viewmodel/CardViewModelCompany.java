@@ -18,7 +18,7 @@ public class CardViewModelCompany extends AndroidViewModel {
     public CardViewModelCompany(@NonNull Application application) {
         super(application);
         repository = new CardItemRepo(application);
-        cardItems = repository.getCardItemList();
+        cardItems = repository.getCardItemCompanyList();
         /*for db cleaning*/
         //repository.nukeDbCompany();
     }

@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.example.logistics.recyclercompany.CardItemCompany;
+import com.example.logistics.recyclerdriver.CardItemDriver;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ public interface CardItemDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void addCardItemCompany(CardItemCompany CardItemCompany);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void addCardItemDriver(CardItemDriver cardItemDriver);
+
+    @Transaction
+    @Query("SELECT * from card_driver WHERE card_driver_hired=:hireValue ORDER BY card_driver_id DESC ")
+    LiveData<List<CardItemDriver>> getCardItemsDriver(boolean hireValue);
+
     @Transaction
     @Query("SELECT * from card_company ORDER BY item_id DESC")
     LiveData<List<CardItemCompany>> getCardItemsCompany();
@@ -27,5 +35,7 @@ public interface CardItemDAO {
 
     @Query("DELETE from card_company WHERE item_id=:item_id")
     public void deleteItemCompany(int item_id);
+
+    //@Query("UPDATE from ")
 
 }

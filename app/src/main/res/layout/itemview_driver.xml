@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="16dp"
+    app:cardBackgroundColor="@color/cardBackgroundCompany"
+    app:cardCornerRadius="2dp">
+    
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/driverImgView">
+
+        </ImageView>
+
+        <TextView
+            android:id="@+id/nameTitleCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="Title"
+            android:gravity="center"
+            style="@style/TextAppearance.AppCompat.Large">
+        </TextView>
+
+        <TextView
+            android:id="@+id/workingHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="Departure: Senigallia, Arrive: Ancona"
+            style="@style/TextAppearance.AppCompat">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/truckCapacity"
+            android:layout_margin="3dp"
+            android:gravity="center"
+            android:text="Insered in "
+            style="@style/TextAppearance.AppCompat">
+        </TextView>
+        
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

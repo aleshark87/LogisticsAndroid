@@ -7,11 +7,12 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.logistics.recyclercompany.CardItemCompany;
+import com.example.logistics.recyclerdriver.CardItemDriver;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {CardItemCompany.class}, version = 1)
+@Database(entities = {CardItemCompany.class, CardItemDriver.class}, version = 1)
 public abstract class CardItemDb extends RoomDatabase {
     public abstract CardItemDAO cardItemDAO();
 

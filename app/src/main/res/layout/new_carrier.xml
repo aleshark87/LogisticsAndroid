@@ -129,7 +129,7 @@
             android:layout_height="150dp"
             android:layout_margin="10dp"
             android:contentDescription="Image taken"
-            android:src="@drawable/ic_launcher_foreground"
+            android:src="@drawable/profile"
             android:background="@color/buttonColor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

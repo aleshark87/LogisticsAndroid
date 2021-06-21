@@ -5,4 +5,5 @@
     <color name="buttonColor">#6b0504</color>
     <color name="cardBackgroundCompany">@color/prussian_blue</color>
     <color name="datePicker">@color/black</color>
+    <color name="dialog">@color/white</color>
 </resources>

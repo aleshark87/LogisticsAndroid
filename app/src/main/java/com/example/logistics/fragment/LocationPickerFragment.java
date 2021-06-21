@@ -59,6 +59,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.visibility;
 
 public class LocationPickerFragment extends Fragment implements PermissionsListener, OnMapReadyCallback {
 
+    public static final String LOCATION_PICKER_FRAGMENT = "Location_Picker_Fragment";
     private static final String DROPPED_MARKER_LAYER_ID = "DROPPED_MARKER_LAYER_ID";
     private Activity activity;
     private MapView mapView;

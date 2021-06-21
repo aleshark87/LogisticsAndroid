@@ -14,7 +14,12 @@ import androidx.fragment.app.Fragment;
 import com.example.logistics.R;
 import com.example.logistics.Utilities;
 
+import static com.example.logistics.fragment.CompanyFragment.COMPANY_FRAGMENT;
+import static com.example.logistics.fragment.NewDriverFragment.NEW_DRIVER_FRAGMENT;
+
 public class HomeFragment extends Fragment {
+
+    public static final String HOME_FRAGMENT = "Home_Fragment";
 
     @Nullable
     @Override
@@ -32,7 +37,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     //companyButton
-                    Utilities.insertFragment((AppCompatActivity)activity, new CompanyFragment(), "CompanyFragment");
+                    Utilities.insertFragment((AppCompatActivity)activity, new CompanyFragment(), COMPANY_FRAGMENT);
                 }
             });
             view.findViewById(R.id.carrierBt).setOnClickListener(new View.OnClickListener() {
@@ -44,7 +49,7 @@ public class HomeFragment extends Fragment {
             view.findViewById(R.id.newCarrierBt).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utilities.insertFragment((AppCompatActivity)activity, new NewDriverFragment(), "NewDriverFragment");
+                    Utilities.insertFragment((AppCompatActivity)activity, new NewDriverFragment(), NEW_DRIVER_FRAGMENT);
                 }
             });
         }

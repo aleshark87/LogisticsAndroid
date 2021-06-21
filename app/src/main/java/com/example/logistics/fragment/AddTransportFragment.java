@@ -74,6 +74,8 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 public class AddTransportFragment extends Fragment implements OnMapReadyCallback {
+
+    public static final String ADD_TRANSPORT_FRAGMENT = "Add_Transport_Fragment";
     private static final String ROUTE_LAYER_ID = "route-layer-id";
     private static final String ROUTE_SOURCE_ID = "route-source-id";
     private static final String ICON_LAYER_ID = "icon-layer-id";
@@ -96,6 +98,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private boolean dateSet = false;
     private boolean timeSet = false;
 
+    //TODO checkare permission magari lo posso fare meglio
     //TODO temare timepicker
     //TODO autisti(recyclerview con lista trasporti disponibili(nuovo autista)
     //TODO supermappa filtrata azienda(per merce, per autista, per data)
@@ -170,6 +173,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                                     productType, Integer.parseInt(quantityText)));
                     titleEdit.getText().clear();
                     Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
+                    ((AppCompatActivity) activity).getSupportFragmentManager().popBackStack();
                 }
                 else{
                     Toast.makeText(activity, "You are missing some fields.", Toast.LENGTH_SHORT).show();

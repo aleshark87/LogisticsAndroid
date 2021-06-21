@@ -2,11 +2,11 @@ package com.example.logistics.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,18 +25,20 @@ import com.example.logistics.Utilities;
 import com.example.logistics.recyclercompany.AdapterCompany;
 import com.example.logistics.recyclercompany.CardItemCompany;
 import com.example.logistics.recyclercompany.ItemClickListener;
-import com.google.gson.Gson;
-import com.mapbox.mapboxsdk.maps.MapView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
-public class CompanyFragment extends Fragment implements ItemClickListener {
+import static com.example.logistics.fragment.AddTransportFragment.ADD_TRANSPORT_FRAGMENT;
+import static com.example.logistics.fragment.CardMapViewFragment.CARD_MAP_FRAGMENT;
+import static com.example.logistics.fragment.DriversToHireFragment.DRIVERS_TO_HIRE_FRAGMENT;
 
-    private MapView mapView;
+public class CompanyFragment extends Fragment implements ItemClickListener{
+
+    public static final String COMPANY_FRAGMENT = "Company_Fragment";
     private Activity activity;
     private AdapterCompany adapterCompany;
     private CardViewModelCompany cardViewModelCompany;
-    private Gson serializator = new Gson();
 
     @Override
     public void onAttach(Context context) {
@@ -70,7 +72,7 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
         super.onViewCreated(view, savedInstanceState);
         Utilities.setUpToolbar((AppCompatActivity) activity, "Company");
         cardViewModelCompany = new ViewModelProvider((ViewModelStoreOwner) activity).get(CardViewModelCompany.class);
-        view.findViewById(R.id.fab).setOnClickListener(v -> Utilities.insertFragment((AppCompatActivity)activity, new AddTransportFragment(), "AddCompanyFragment"));
+        view.findViewById(R.id.fab).setOnClickListener(v -> Utilities.insertFragment((AppCompatActivity)activity, new AddTransportFragment(), ADD_TRANSPORT_FRAGMENT));
 
         cardViewModelCompany.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItemCompany>>() {
             @Override
@@ -78,11 +80,34 @@ public class CompanyFragment extends Fragment implements ItemClickListener {
                 adapterCompany.setData(cardItemCompanies);
             }
         });
+
+        view.findViewById(R.id.driversButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*DialogFragment newFragment = new DriversDialogFragment();
+                newFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.MyDialogStyle);
+                newFragment.show(((AppCompatActivity) activity).getSupportFragmentManager(), DRIVERS_DIALOG_FRAGMENT);*/
+                new MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog)
+                        .setMessage("Want to hire new Drivers?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utilities.insertFragment((AppCompatActivity)activity, new DriversToHireFragment(), DRIVERS_TO_HIRE_FRAGMENT);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(activity, "You clicked " + adapterCompany.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position)), "CardMapViewFragment");
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position)), CARD_MAP_FRAGMENT);
     }
 }

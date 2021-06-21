@@ -50,7 +50,7 @@ public class AdapterCompany extends RecyclerView.Adapter<ViewHolderCompany>  {
     @Override
     public void onBindViewHolder(@NonNull ViewHolderCompany holder, int position) {
         CardItemCompany currentCardItemCompany = itemsList.get(position);
-        if((removeIfOld(currentCardItemCompany) == false)) {
+        if((!removeIfOld(currentCardItemCompany))) {
             holder.getTitleTextView().setText(currentCardItemCompany.getTitle());
             holder.getDestArrTextView().setText("Origin: " + currentCardItemCompany.getOriginLocality() +
                     ", Destination: " + currentCardItemCompany.getDestinationLocality());

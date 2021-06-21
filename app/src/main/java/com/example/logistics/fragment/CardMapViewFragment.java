@@ -66,6 +66,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
 
+    public static final String CARD_MAP_FRAGMENT = "Card_Map_View_Fragment";
     private static final String ROUTE_LAYER_ID = "route-layer-id";
     private static final String ROUTE_SOURCE_ID = "route-source-id";
     private static final String ICON_LAYER_ID = "icon-layer-id";
