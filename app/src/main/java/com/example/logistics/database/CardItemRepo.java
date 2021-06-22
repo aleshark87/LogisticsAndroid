@@ -1,8 +1,10 @@
 package com.example.logistics.database;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.logistics.recyclercompany.CardItemCompany;
 import com.example.logistics.recyclerdriver.CardItemDriver;
@@ -67,12 +69,17 @@ public class CardItemRepo {
         });
     }
 
-    public void updateHiredDriver(boolean hireValue, int card_id){
+    public void updateHiredDriver(boolean hireValue, String card_name){
         CardItemDb.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                cardItemDAO.updateDriverHired(hireValue, card_id);
+                cardItemDAO.updateDriverHired(hireValue, card_name);
             }
         });
+    }
+
+    public LiveData<CardItemDriver> getCardItemDriverFromName(String name){
+        LiveData<CardItemDriver> live = cardItemDAO.getCardDriverFromName(name);
+        return live;
     }
 }

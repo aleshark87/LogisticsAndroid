@@ -23,7 +23,7 @@ public interface CardItemDAO {
     void addCardItemDriver(CardItemDriver cardItemDriver);
 
     @Transaction
-    @Query("SELECT * from card_driver WHERE card_driver_hired=:hireValue ORDER BY card_driver_id DESC ")
+    @Query("SELECT * from card_driver WHERE card_driver_hired=:hireValue ORDER BY card_driver_name DESC ")
     LiveData<List<CardItemDriver>> getCardItemsDriver(boolean hireValue);
 
     @Transaction
@@ -36,7 +36,13 @@ public interface CardItemDAO {
     @Query("DELETE from card_company WHERE item_id=:item_id")
     public void deleteItemCompany(int item_id);
 
-    @Query("UPDATE card_driver SET card_driver_hired=:hireValue WHERE card_driver_id=:item_id")
-    public void updateDriverHired(boolean hireValue, int item_id);
+    @Query("UPDATE card_driver SET card_driver_hired=:hireValue WHERE card_driver_name=:item_name")
+    public void updateDriverHired(boolean hireValue, String item_name);
+
+    @Transaction
+    @Query("SELECT * FROM card_driver WHERE card_driver_name=:name")
+    LiveData<CardItemDriver> getCardDriverFromName(String name);
+
+
 
 }

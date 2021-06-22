@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.logistics.R;
 import com.example.logistics.Utilities;
+import com.example.logistics.database.CardItemRepo;
 import com.example.logistics.recyclerdriver.CardItemDriver;
 import com.example.logistics.viewmodel.NotHiredViewModel;
 import com.example.logistics.viewmodel.DriverPhotoViewModel;
@@ -65,6 +66,8 @@ public class NewDriverFragment extends Fragment {
     private boolean timeFinishSet = false;
     private String formattedTimeStart = "";
     private String formattedTimeFinish = "";
+    private int id;
+    private CardItemRepo repository;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -82,6 +85,7 @@ public class NewDriverFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        repository = new CardItemRepo(activity.getApplication());
         Utilities.setUpToolbar((AppCompatActivity)activity, "New Driver");
         getItemsFromView(view);
         viewModelPhoto = new ViewModelProvider((ViewModelStoreOwner) activity).get(DriverPhotoViewModel.class);
@@ -121,19 +125,17 @@ public class NewDriverFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
-                        notHiredViewModel.addCardItem(new CardItemDriver(imageUriString,
+                        CardItemDriver newDriver = new CardItemDriver(imageUriString,
                                 nameString, Integer.parseInt(capacityString),
-                                formattedTimeStart + "_" + formattedTimeFinish, false));
+                                formattedTimeStart + "_" + formattedTimeFinish, false);
+                        notHiredViewModel.addCardItem(newDriver);
+                        id++;
                         Bitmap bitmapProfile = BitmapFactory.decodeResource(getResources(), R.drawable.profile);
                         viewModelPhoto.setPhoto(bitmapProfile);
                         editTextCapacity.setText("");
                         editTextName.setText("");
                         timeStartSet = false; hourStartTV.setText("Hour not set");
                         timeFinishSet = false; hourFinishTV.setText("Hour not set");
-                        Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        Toast.makeText(activity, "not added", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else{

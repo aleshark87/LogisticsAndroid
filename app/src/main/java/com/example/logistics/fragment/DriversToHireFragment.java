@@ -71,13 +71,13 @@ public class DriversToHireFragment extends Fragment implements ItemClickListener
                 adapter.setData(cardItemDrivers);
             }
         });
-        Toast.makeText(activity, "Tap a card to hire a driver", Toast.LENGTH_SHORT);
+        Toast.makeText(activity, "Tap a card to hire a driver", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onItemClick(View view, int position) {
+        Toast.makeText(activity, "Hired " + adapter.getItem(position).getDriverName(), Toast.LENGTH_SHORT).show();
         //update al carditem
-        repository.updateHiredDriver(true, adapter.getItem(position).getId());
-        Toast.makeText(activity, "Hired " + adapter.getItem(position).getDriverName(), Toast.LENGTH_SHORT);
+        repository.updateHiredDriver(true, adapter.getItem(position).getDriverName());
     }
 }

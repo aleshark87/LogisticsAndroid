@@ -170,7 +170,8 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                                     destinationAddress.getLatitude(), destinationAddress.getLongitude(),
                                     originAddress.getLocality(), destinationAddress.getLocality(),
                                     formattedDate + ", " + formattedTime,
-                                    productType, Integer.parseInt(quantityText)));
+                                    productType, Integer.parseInt(quantityText),
+                                    null, "progress"));
                     titleEdit.getText().clear();
                     Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
                     ((AppCompatActivity) activity).getSupportFragmentManager().popBackStack();

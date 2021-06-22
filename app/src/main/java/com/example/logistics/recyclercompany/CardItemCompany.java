@@ -1,5 +1,6 @@
 package com.example.logistics.recyclercompany;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -33,10 +34,18 @@ public class CardItemCompany {
     @ColumnInfo(name="item_product_quantity")
     private int quantityKg;
 
+    @ColumnInfo(name="item_driverName")
+    @Nullable
+    private String driverName;
+
+    @ColumnInfo(name="item_transportState")
+    private String transportState;
+
     public CardItemCompany(int imgResource, String title,
                            Double originLat, Double originLong, Double destinationLat, Double destinationLong,
                            String originLocality, String destinationLocality,
-                           String date, String productType, int quantityKg){
+                           String date, String productType, int quantityKg,
+                           String driverName, String transportState){
         this.imgResource = imgResource;
         this.title = title;
         this.date = date;
@@ -48,6 +57,25 @@ public class CardItemCompany {
         this.destinationLocality = destinationLocality;
         this.productType = productType;
         this.quantityKg = quantityKg;
+        this.driverName = driverName;
+        this.transportState = transportState;
+    }
+
+    @Nullable
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(@Nullable String driverName) {
+        this.driverName = driverName;
+    }
+
+    public String getTransportState() {
+        return transportState;
+    }
+
+    public void setTransportState(String transportState) {
+        this.transportState = transportState;
     }
 
     public String getProductType() {

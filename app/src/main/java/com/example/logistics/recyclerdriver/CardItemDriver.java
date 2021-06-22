@@ -1,5 +1,6 @@
 package com.example.logistics.recyclerdriver;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,15 +8,13 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "card_driver")
 public class CardItemDriver {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "card_driver_id")
-    private int id;
+    @PrimaryKey
+    @ColumnInfo(name="card_driver_name")
+    @NonNull
+    private String driverName;
 
     @ColumnInfo(name="card_driver_image")
     private String imgResource;
-
-    @ColumnInfo(name="card_driver_name")
-    private String driverName;
 
     @ColumnInfo(name="card_driver_capacity")
     private int capacity;
@@ -41,14 +40,6 @@ public class CardItemDriver {
 
     public void setHired(boolean hired) {
         this.hired = hired;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getImgResource() {
