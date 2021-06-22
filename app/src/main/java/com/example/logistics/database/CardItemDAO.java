@@ -36,6 +36,7 @@ public interface CardItemDAO {
     @Query("DELETE from card_company WHERE item_id=:item_id")
     public void deleteItemCompany(int item_id);
 
-    //@Query("UPDATE from ")
+    @Query("UPDATE card_driver SET card_driver_hired=:hireValue WHERE card_driver_id=:item_id")
+    public void updateDriverHired(boolean hireValue, int item_id);
 
 }

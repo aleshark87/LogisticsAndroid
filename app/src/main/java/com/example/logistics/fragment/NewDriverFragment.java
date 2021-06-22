@@ -39,6 +39,7 @@ import com.google.android.material.timepicker.TimeFormat;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -109,32 +110,61 @@ public class NewDriverFragment extends Fragment {
             public void onClick(View v) {
                 String nameString = editTextName.getText().toString();
                 String capacityString = editTextCapacity.getText().toString();
-                if(!nameString.matches("") && !capacityString.matches("") && timeStartSet && timeFinishSet){
-                    Bitmap bitmap = viewModelPhoto.getPhoto().getValue();
-                    String imageUriString = "profile";
-                    if(bitmap != null){
-                        try {
-                            imageUriString = String.valueOf(saveImage(bitmap, activity));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                if(checkTimings(formattedTimeStart, formattedTimeFinish)){
+                    if(!nameString.matches("") && !capacityString.matches("") && timeStartSet && timeFinishSet){
+                        Bitmap bitmap = viewModelPhoto.getPhoto().getValue();
+                        String imageUriString = "profile";
+                        if(bitmap != null){
+                            try {
+                                imageUriString = String.valueOf(saveImage(bitmap, activity));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        notHiredViewModel.addCardItem(new CardItemDriver(imageUriString,
+                                nameString, Integer.parseInt(capacityString),
+                                formattedTimeStart + "_" + formattedTimeFinish, false));
+                        Bitmap bitmapProfile = BitmapFactory.decodeResource(getResources(), R.drawable.profile);
+                        viewModelPhoto.setPhoto(bitmapProfile);
+                        editTextCapacity.setText("");
+                        editTextName.setText("");
+                        timeStartSet = false; hourStartTV.setText("Hour not set");
+                        timeFinishSet = false; hourFinishTV.setText("Hour not set");
+                        Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
                     }
-                    notHiredViewModel.addCardItem(new CardItemDriver(imageUriString,
-                            nameString, Integer.parseInt(capacityString),
-                            formattedTimeStart + "_" + formattedTimeFinish, false));
-                    Bitmap bitmapProfile = BitmapFactory.decodeResource(getResources(), R.drawable.profile);
-                    viewModelPhoto.setPhoto(bitmapProfile);
-                    editTextCapacity.setText("");
-                    editTextName.setText("");
-                    timeStartSet = false; hourStartTV.setText("Hour not set");
-                    timeFinishSet = false; hourFinishTV.setText("Hour not set");
-                    Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
+                    else{
+                        Toast.makeText(activity, "not added", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else{
-                    Toast.makeText(activity, "not added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Time not set properly", Toast.LENGTH_SHORT).show();
+                    timeStartSet = false; hourStartTV.setText("Hour not set");
+                    timeFinishSet = false; hourFinishTV.setText("Hour not set");
                 }
+
             }
         });
+    }
+
+    private boolean checkTimings(String time, String endtime) {
+
+        String pattern = "HH:mm";
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+
+        try {
+            Date date1 = sdf.parse(time);
+            Date date2 = sdf.parse(endtime);
+
+            if(date1.before(date2)) {
+                return true;
+            } else {
+
+                return false;
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

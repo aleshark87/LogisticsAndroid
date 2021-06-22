@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.example.logistics.fragment.AddTransportFragment.ADD_TRANSPORT_FRAGMENT;
 import static com.example.logistics.fragment.CardMapViewFragment.CARD_MAP_FRAGMENT;
+import static com.example.logistics.fragment.DriversHiredFragment.DRIVERS_HIRED_FRAGMENT;
 import static com.example.logistics.fragment.DriversToHireFragment.DRIVERS_TO_HIRE_FRAGMENT;
 
 public class CompanyFragment extends Fragment implements ItemClickListener{
@@ -84,9 +85,6 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
         view.findViewById(R.id.driversButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*DialogFragment newFragment = new DriversDialogFragment();
-                newFragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.MyDialogStyle);
-                newFragment.show(((AppCompatActivity) activity).getSupportFragmentManager(), DRIVERS_DIALOG_FRAGMENT);*/
                 new MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog)
                         .setMessage("Want to hire new Drivers?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -98,7 +96,7 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                Utilities.insertFragment((AppCompatActivity)activity, new DriversHiredFragment(), DRIVERS_HIRED_FRAGMENT);
                             }
                         })
                         .show();

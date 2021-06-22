@@ -66,4 +66,13 @@ public class CardItemRepo {
             }
         });
     }
+
+    public void updateHiredDriver(boolean hireValue, int card_id){
+        CardItemDb.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                cardItemDAO.updateDriverHired(hireValue, card_id);
+            }
+        });
+    }
 }
