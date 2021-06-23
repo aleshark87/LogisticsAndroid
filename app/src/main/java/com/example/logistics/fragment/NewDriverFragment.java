@@ -120,7 +120,10 @@ public class NewDriverFragment extends Fragment {
                         String imageUriString = "profile";
                         if(bitmap != null){
                             try {
-                                imageUriString = String.valueOf(saveImage(bitmap, activity));
+                                if(!imageUriString.matches("profile")){
+                                    imageUriString = String.valueOf(saveImage(bitmap, activity));
+                                }
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

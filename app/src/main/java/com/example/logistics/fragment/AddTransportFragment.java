@@ -2,7 +2,10 @@ package com.example.logistics.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -25,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.example.logistics.notification.NotificationReceiver;
 import com.example.logistics.viewmodel.CardViewModelCompany;
 import com.example.logistics.viewmodel.LocViewModel;
 import com.example.logistics.R;
@@ -175,6 +179,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                                     null, "insered"));
                     titleEdit.getText().clear();
                     Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
+                    //setAlarm();
                     ((AppCompatActivity) activity).getSupportFragmentManager().popBackStack();
                 }
                 else{
@@ -183,6 +188,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
             }
         });
     }
+
 
     private void setDateButtonListeners(Button dateButton, Button timeButton, TextView resultDateView){
         MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()

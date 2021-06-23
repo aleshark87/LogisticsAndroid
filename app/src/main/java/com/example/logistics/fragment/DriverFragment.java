@@ -1,7 +1,10 @@
 package com.example.logistics.fragment;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.logistics.R;
 import com.example.logistics.Utilities;
 import com.example.logistics.database.CardItemRepo;
+import com.example.logistics.notification.NotificationReceiver;
 import com.example.logistics.recyclercompany.AdapterCompany;
 import com.example.logistics.recyclercompany.CardItemCompany;
 import com.example.logistics.recyclercompany.ItemClickListener;
@@ -37,6 +41,7 @@ import com.example.logistics.viewmodel.CardViewModelCompany;
 import com.example.logistics.viewmodel.NotHiredViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,6 +64,7 @@ public class DriverFragment extends Fragment implements ItemClickListener {
     private List<CardItemCompany> filteredInProgress;
     private List<CardItemCompany> filteredDone;
     private CardItemRepo repository;
+    public static String notificationMessage;
 
     public DriverFragment(CardItemDriver driver) {
         this.driver = driver;
@@ -218,8 +224,31 @@ public class DriverFragment extends Fragment implements ItemClickListener {
         else{
             repository.updateTransportState("progress", cardItemCompany.getId(), driver.getDriverName());
             Toast.makeText(activity, "Transport " + cardItemCompany.getTitle() + " taken", Toast.LENGTH_SHORT).show();
+            setAlarm(cardItemCompany);
         }
     }
 
+    public void setAlarm(CardItemCompany cardItemCompany) {
+        notificationMessage = driver.getDriverName() + " you have to do transport " + cardItemCompany.getTitle();
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, 19);
+        calendar.set(Calendar.MINUTE, 20);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Calendar cur = Calendar.getInstance();
+
+        if (cur.after(calendar)) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        Intent myIntent = new Intent(activity.getApplicationContext(), NotificationReceiver.class);
+        int ALARM1_ID = 10000;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                activity.getApplicationContext(), ALARM1_ID, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) activity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
 
 }
