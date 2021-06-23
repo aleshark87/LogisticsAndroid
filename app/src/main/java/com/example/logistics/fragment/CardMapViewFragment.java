@@ -3,12 +3,15 @@ package com.example.logistics.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +23,8 @@ import androidx.fragment.app.Fragment;
 import com.example.logistics.R;
 import com.example.logistics.Utilities;
 import com.example.logistics.recyclercompany.CardItemCompany;
+import com.google.gson.Gson;
+import com.google.zxing.WriterException;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
@@ -42,6 +47,11 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,10 +60,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.ContentValues.TAG;
+import static com.example.logistics.fragment.QrReaderFragment.QR_FRAGMENT;
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -76,9 +90,13 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
     private CardItemCompany cardItemCompany;
     private MapView mapView;
     private TextView informationTV;
+    private boolean smallInformation;
+    private boolean noQr;
 
-    public CardMapViewFragment(CardItemCompany item){
+    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr){
         this.cardItemCompany = item;
+        this.smallInformation = smallInformation;
+        this.noQr = noQr;
     }
 
     @Override
@@ -108,6 +126,47 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         informationTV = view.findViewById(R.id.informationCardMapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        // Initializing the QR Encoder with your value to be encoded, type you required and Dimension
+        if(!noQr) {
+            QRGEncoder qrgEncoder = null;
+            try {
+                qrgEncoder = new QRGEncoder(getSerializedString(), null, QRGContents.Type.TEXT, 250);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            qrgEncoder.setColorBlack(Color.BLACK);
+            qrgEncoder.setColorWhite(Color.WHITE);
+            try {
+                // Getting QR-Code as Bitmap
+                Bitmap bitmap = qrgEncoder.getBitmap();
+                ImageView qrImg = view.findViewById(R.id.qrImgView);
+                // Setting Bitmap to ImageView
+                qrImg.setImageBitmap(bitmap);
+            } catch (Exception e) {
+            }
+        }
+        else{
+            ImageView qrImg = view.findViewById(R.id.qrImgView);
+            qrImg.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private String getSerializedString() throws JSONException {
+        JSONObject cardItem = new JSONObject();
+        /*cardItem.put("id", cardItemCompany.getId());
+        cardItem.put("title", cardItemCompany.getTitle());*/
+        cardItem.put("originLat", cardItemCompany.getOriginLat());
+        cardItem.put("originLong", cardItemCompany.getOriginLong());
+        cardItem.put("destinationLat", cardItemCompany.getDestinationLat());
+        cardItem.put("destinationLong", cardItemCompany.getDestinationLong());
+        /*cardItem.put("originLocality", cardItemCompany.getOriginLocality());
+        cardItem.put("destinationLocality", cardItemCompany.getDestinationLocality());*/
+        cardItem.put("date", cardItemCompany.getDate());
+        /*cardItem.put("productType", cardItemCompany.getProductType());
+        cardItem.put("quantity", cardItemCompany.getQuantityKg());
+        cardItem.put("driver", cardItemCompany.getDriverName());
+        cardItem.put("transportState", cardItemCompany.getTransportState());*/
+        return cardItem.toString();
     }
 
     @Override
@@ -213,15 +272,21 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
     private String msgLabelBuilder(DirectionsRoute route){
         String msg;
         int distanceRounded = (int)Math.round(route.distance() / 1000);
-        List<String> timeRoundedResults = timeRounder(route.duration());
-        int numberOfHours = Integer.parseInt(timeRoundedResults.get(1).split(":")[0]);
-        int numberOfMinutes = Integer.parseInt(timeRoundedResults.get(1).split(":")[1]);
-        String dateStart = cardItemCompany.getDate().split(" ")[1];
-        Log.d("tag", dateStart.split(":")[1]);
-        int startHours = Integer.parseInt(dateStart.split(":")[0]);
-        int startMinutes = Integer.parseInt(dateStart.split(":")[1]);
-        msg = "The distance is " + distanceRounded + " km and it will be " + timeRounder(route.duration()).get(0) +
-                ". Estimated Time of Arrive : " + arriveTime(startHours, startMinutes, numberOfHours, numberOfMinutes);
+        if(smallInformation){
+            msg = "The total distance of the transport is " + distanceRounded + " km";
+        }
+        else{
+            List<String> timeRoundedResults = timeRounder(route.duration());
+            int numberOfHours = Integer.parseInt(timeRoundedResults.get(1).split(":")[0]);
+            int numberOfMinutes = Integer.parseInt(timeRoundedResults.get(1).split(":")[1]);
+            String dateStart = cardItemCompany.getDate().split(" ")[1];
+            Log.d("tag", dateStart.split(":")[1]);
+            int startHours = Integer.parseInt(dateStart.split(":")[0]);
+            int startMinutes = Integer.parseInt(dateStart.split(":")[1]);
+            msg = "The distance is " + distanceRounded + " km and it will be " + timeRounder(route.duration()).get(0) +
+                    ". Estimated Time of Arrive : " + arriveTime(startHours, startMinutes, numberOfHours, numberOfMinutes);
+        }
+
 
         return msg;
     }

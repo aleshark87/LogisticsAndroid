@@ -82,4 +82,18 @@ public class CardItemRepo {
         LiveData<CardItemDriver> live = cardItemDAO.getCardDriverFromName(name);
         return live;
     }
+
+    public LiveData<CardItemCompany> getCardItemCompanyFromId(int id){
+        LiveData<CardItemCompany> live = cardItemDAO.getCardCompanyFromId(id);
+        return live;
+    }
+
+    public void updateTransportState(String state, int card_id, String name){
+        CardItemDb.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                cardItemDAO.updateTransportState(state, card_id, name);
+            }
+        });
+    }
 }

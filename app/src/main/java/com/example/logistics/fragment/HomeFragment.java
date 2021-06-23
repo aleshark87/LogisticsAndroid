@@ -15,6 +15,7 @@ import com.example.logistics.R;
 import com.example.logistics.Utilities;
 
 import static com.example.logistics.fragment.CompanyFragment.COMPANY_FRAGMENT;
+import static com.example.logistics.fragment.CompanyLoginFragment.COMPANY_LOGIN_FRAGMENT;
 import static com.example.logistics.fragment.DriversLoginFragment.DRIVER_LOGIN_FRAGMENT;
 import static com.example.logistics.fragment.NewDriverFragment.NEW_DRIVER_FRAGMENT;
 
@@ -38,7 +39,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     //companyButton
-                    Utilities.insertFragment((AppCompatActivity)activity, new CompanyFragment(), COMPANY_FRAGMENT);
+                    Utilities.insertFragment((AppCompatActivity)activity, new CompanyLoginFragment(), COMPANY_LOGIN_FRAGMENT);
                 }
             });
             view.findViewById(R.id.carrierBt).setOnClickListener(new View.OnClickListener() {

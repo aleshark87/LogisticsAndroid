@@ -1,7 +1,9 @@
 package com.example.logistics.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
@@ -100,10 +104,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
 
     //TODO checkare permission magari lo posso fare meglio
     //TODO temare timepicker
-    //TODO autisti(recyclerview con lista trasporti disponibili(nuovo autista)
     //TODO supermappa filtrata azienda(per merce, per autista, per data)
-    //TODO check geocoder lat long(se uno sceglie il mare(latlong troppo diversa da quella scelta)
-    //TODO sistemare quando si chiede il permesso della posizione
 
 
     @Override
@@ -171,7 +172,7 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
                                     originAddress.getLocality(), destinationAddress.getLocality(),
                                     formattedDate + ", " + formattedTime,
                                     productType, Integer.parseInt(quantityText),
-                                    null, "progress"));
+                                    null, "insered"));
                     titleEdit.getText().clear();
                     Toast.makeText(activity, "Added succesfully!", Toast.LENGTH_SHORT).show();
                     ((AppCompatActivity) activity).getSupportFragmentManager().popBackStack();

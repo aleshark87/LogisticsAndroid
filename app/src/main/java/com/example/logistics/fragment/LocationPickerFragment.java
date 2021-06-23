@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
@@ -161,6 +164,12 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
             public void onStyleLoaded(@NonNull final Style style) {
                 enableLocationPlugin(style);
 
+                CameraPosition position = new CameraPosition.Builder()
+                        .target(new LatLng(41.902782, 12.496366))
+                        .zoom(2)
+                        .tilt(20)
+                        .build();
+                mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 100);
                 // When user is still picking a location, we hover a marker above the mapboxMap in the center.
                 // This is done by using an image view with the default marker found in the SDK. You can
                 // swap out for your own marker image, just make sure it matches up with the dropped marker.
@@ -293,6 +302,7 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
             Style style = mapboxMap.getStyle();
             if (style != null) {
                 enableLocationPlugin(style);
+
             }
         } else {
 

@@ -32,17 +32,32 @@
             app:layout_constraintBottom_toTopOf="@id/recycler"
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
-            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:text="GO TO DRIVERS"
             style="@style/normalBt">
+        </Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/detailedMapBt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/recycler"
+            app:layout_constraintTop_toBottomOf="@id/driversButton"
+            android:layout_marginLeft="100dp"
+            android:layout_marginRight="100dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="detailed map view"
+            style="@style/normalBt">
+
         </Button>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/driversButton"
+            app:layout_constraintTop_toBottomOf="@id/detailedMapBt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

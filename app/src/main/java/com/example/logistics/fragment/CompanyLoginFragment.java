@@ -3,11 +3,12 @@ package com.example.logistics.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,13 +23,12 @@ import com.example.logistics.database.CardItemRepo;
 import com.example.logistics.recyclerdriver.CardItemDriver;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.List;
-
+import static com.example.logistics.fragment.CompanyFragment.COMPANY_FRAGMENT;
 import static com.example.logistics.fragment.DriverFragment.DRIVER_FRAGMENT;
 
-public class DriversLoginFragment extends Fragment {
+public class CompanyLoginFragment extends Fragment {
 
-    public static final String DRIVER_LOGIN_FRAGMENT = "Driver_Login_Fragment";
+    public static final String COMPANY_LOGIN_FRAGMENT = "Company_Login_Fragment";
     private Activity activity;
     private TextInputEditText editTextId;
     private CardItemRepo repository;
@@ -51,32 +51,24 @@ public class DriversLoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         repository = new CardItemRepo(activity.getApplication());
-        Utilities.setUpToolbar((AppCompatActivity)activity, "Drivers");
+        Utilities.setUpToolbar((AppCompatActivity)activity, "Company");
         editTextId = view.findViewById(R.id.editTextName);
+        editTextId.setHint("Write the company password");
+        //editTextId.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        editTextId.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
         label = view.findViewById(R.id.textLogin);
         view.findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String nameWritten = editTextId.getText().toString();
-                repository.getCardItemDriverFromName(nameWritten).observe((LifecycleOwner) activity, new Observer<CardItemDriver>() {
-                    @Override
-                    public void onChanged(CardItemDriver cardItemDriver) {
-                        //switch fragment
-                        if(cardItemDriver != null){
-                            if(nameWritten.matches(cardItemDriver.getDriverName())){
-                                if(cardItemDriver.isHired()){
-                                    Utilities.insertFragment((AppCompatActivity)activity, new DriverFragment(cardItemDriver), DRIVER_FRAGMENT);
-                                }
-                                else{
-                                    label.setText("Company not hired you yet");
-                                }
-                            }
-                        }
-                        else{
-                            label.setText("Can't find " + nameWritten);
-                        }
-                    }
-                });
+                if(nameWritten.matches("0000")){
+                    editTextId.getText().clear();
+                    Utilities.insertFragment((AppCompatActivity)activity, new CompanyFragment(), COMPANY_FRAGMENT);
+                }
+                else{
+                    label.setText("Wrong password!");
+                }
             }
         });
     }

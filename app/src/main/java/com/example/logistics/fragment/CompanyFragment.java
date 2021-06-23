@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,12 @@ import com.example.logistics.recyclercompany.CardItemCompany;
 import com.example.logistics.recyclercompany.ItemClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.logistics.fragment.AddTransportFragment.ADD_TRANSPORT_FRAGMENT;
 import static com.example.logistics.fragment.CardMapViewFragment.CARD_MAP_FRAGMENT;
+import static com.example.logistics.fragment.DetailedMapFragment.DETAILED_MAP_FRAGMENT;
 import static com.example.logistics.fragment.DriversHiredFragment.DRIVERS_HIRED_FRAGMENT;
 import static com.example.logistics.fragment.DriversToHireFragment.DRIVERS_TO_HIRE_FRAGMENT;
 
@@ -40,6 +43,8 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
     private Activity activity;
     private AdapterCompany adapterCompany;
     private CardViewModelCompany cardViewModelCompany;
+    private List<CardItemCompany> listAvailable;
+    private List<CardItemCompany> listInProgress;
 
     @Override
     public void onAttach(Context context) {
@@ -79,6 +84,8 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
             @Override
             public void onChanged(List<CardItemCompany> cardItemCompanies) {
                 adapterCompany.setData(cardItemCompanies);
+                filterListAvailable(cardItemCompanies);
+                filterListInProgress(cardItemCompanies);
             }
         });
 
@@ -102,10 +109,55 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
                         .show();
             }
         });
+
+        view.findViewById(R.id.detailedMapBt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //start detailed map fragment
+                Utilities.insertFragment((AppCompatActivity)activity, new DetailedMapFragment(listAvailable, listInProgress), DETAILED_MAP_FRAGMENT);
+            }
+        });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position)), CARD_MAP_FRAGMENT);
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false), CARD_MAP_FRAGMENT);
+    }
+
+    private List<CardItemCompany> filterListAvailable(List<CardItemCompany> cardItemCompanies) {
+        //NO REFERENCE
+        List<CardItemCompany> copy = new ArrayList<>(new ArrayList<>(cardItemCompanies));
+        List<CardItemCompany> transportToRemove = new ArrayList<>();
+        for (CardItemCompany card : copy) {
+            if (!card.getTransportState().matches("insered")) {
+                transportToRemove.add(card);
+            }
+        }
+        for (CardItemCompany card : transportToRemove) {
+            copy.remove(card);
+        }
+        listAvailable = copy;
+        return copy;
+    }
+
+    private List<CardItemCompany> filterListInProgress(List<CardItemCompany> cardItemCompanies) {
+        List<CardItemCompany> copy = new ArrayList<>(new ArrayList<>(cardItemCompanies));
+        List<CardItemCompany> transportToRemove = new ArrayList<>();
+        for (CardItemCompany card : copy) {
+            //da fare presa in carico
+            if(card.getDriverName() == null){
+                transportToRemove.add(card);
+            }
+            else{
+                if (!card.getTransportState().matches("progress")) {
+                    transportToRemove.add(card);
+                }
+            }
+        }
+        for (CardItemCompany card : transportToRemove) {
+            copy.remove(card);
+        }
+        listInProgress = copy;
+        return copy;
     }
 }

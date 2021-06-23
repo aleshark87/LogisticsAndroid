@@ -39,10 +39,15 @@ public interface CardItemDAO {
     @Query("UPDATE card_driver SET card_driver_hired=:hireValue WHERE card_driver_name=:item_name")
     public void updateDriverHired(boolean hireValue, String item_name);
 
+    @Query("UPDATE card_company SET item_transportState=:state, item_driverName=:name WHERE item_id=:id")
+    void updateTransportState(String state, int id, String name);
+
     @Transaction
     @Query("SELECT * FROM card_driver WHERE card_driver_name=:name")
     LiveData<CardItemDriver> getCardDriverFromName(String name);
 
-
+    @Transaction
+    @Query("SELECT * FROM card_company WHERE item_id=:id")
+    LiveData<CardItemCompany> getCardCompanyFromId(int id);
 
 }

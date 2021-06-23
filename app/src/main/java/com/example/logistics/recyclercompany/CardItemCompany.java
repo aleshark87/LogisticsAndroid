@@ -3,6 +3,7 @@ package com.example.logistics.recyclercompany;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName="card_company")
@@ -59,6 +60,17 @@ public class CardItemCompany {
         this.quantityKg = quantityKg;
         this.driverName = driverName;
         this.transportState = transportState;
+    }
+
+    @Ignore
+    public CardItemCompany(Double originLat, Double originLong,
+                           Double destinationLat, Double destinationLong,
+                           String date){
+        this.originLat = originLat;
+        this.originLong = originLong;
+        this.destinationLat = destinationLat;
+        this.destinationLong = destinationLong;
+        this.date = date;
     }
 
     @Nullable
