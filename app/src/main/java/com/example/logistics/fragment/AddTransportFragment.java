@@ -106,10 +106,12 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private boolean dateSet = false;
     private boolean timeSet = false;
 
-    //TODO checkare permission magari lo posso fare meglio
-    //TODO temare timepicker
-    //TODO supermappa filtrata azienda(per merce, per autista, per data)
-
+    //TODO finire mappa filtrata driver, e fare mappa per doneTransports
+    //TODO controllo ora autisti e trasporti
+    //TODO done transports vorrei anche la data di fine..
+    //TODO nuova view company(solo job available, oppure tre categorie, oppure solo in progress)
+    //TODO filtri combinati (OPZIONALE)
+    //TODO visualizzazione fuori orologio con 13:00,01(OPZIONALE)
 
     @Override
     public void onAttach(@NonNull Context context) {

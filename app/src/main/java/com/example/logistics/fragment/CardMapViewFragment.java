@@ -22,7 +22,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.logistics.R;
 import com.example.logistics.Utilities;
+import com.example.logistics.database.CardItemRepo;
 import com.example.logistics.recyclercompany.CardItemCompany;
+import com.example.logistics.recyclerdriver.CardItemDriver;
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
@@ -67,6 +69,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.example.logistics.fragment.DriverFragment.DRIVER_FRAGMENT;
+import static com.example.logistics.fragment.HomeFragment.HOME_FRAGMENT;
 import static com.example.logistics.fragment.QrReaderFragment.QR_FRAGMENT;
 import static com.mapbox.core.constants.Constants.PRECISION_6;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
@@ -92,11 +96,25 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
     private TextView informationTV;
     private boolean smallInformation;
     private boolean noQr;
+    private boolean buttonDoneJob;
+    private CardItemRepo repo;
+    private CardItemDriver driver;
 
-    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr){
+    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr,
+                               boolean buttonDoneJob, CardItemDriver driver){
         this.cardItemCompany = item;
         this.smallInformation = smallInformation;
         this.noQr = noQr;
+        this.buttonDoneJob = buttonDoneJob;
+        this.driver = driver;
+    }
+
+    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr,
+                               boolean buttonDoneJob){
+        this.cardItemCompany = item;
+        this.smallInformation = smallInformation;
+        this.noQr = noQr;
+        this.buttonDoneJob = buttonDoneJob;
     }
 
     @Override
@@ -121,6 +139,20 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(!buttonDoneJob){
+            view.findViewById(R.id.buttonJobDone).setVisibility(View.GONE);
+        }
+        else{
+            repo = new CardItemRepo(activity.getApplication());
+            view.findViewById(R.id.buttonJobDone).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    repo.updateTransportState("done", cardItemCompany.getId(), driver.getDriverName());
+                    Toast.makeText(activity, "Transport " + cardItemCompany.getTitle() + " done.", Toast.LENGTH_SHORT).show();
+                    Utilities.insertFragment((AppCompatActivity)activity, new HomeFragment(), HOME_FRAGMENT);
+                }
+            });
+        }
         Utilities.setUpToolbar((AppCompatActivity)activity, "Card Map View");
         mapView = view.findViewById(R.id.cardMapView);
         informationTV = view.findViewById(R.id.informationCardMapView);

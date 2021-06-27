@@ -101,7 +101,7 @@ public class QrReaderFragment extends Fragment {
                     CardItemCompany cardItem = new CardItemCompany(json.getDouble("originLat"),
                             json.getDouble("originLong"), json.getDouble("destinationLat"),
                             json.getDouble("destinationLong"), json.getString("date"));
-                    Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(cardItem, false, true), CARD_MAP_FRAGMENT);
+                    Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(cardItem, false, true, false), CARD_MAP_FRAGMENT);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

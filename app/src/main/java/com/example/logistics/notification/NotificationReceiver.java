@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,29 +35,32 @@ import static androidx.core.content.ContextCompat.getSystemService;
 public class NotificationReceiver extends BroadcastReceiver {
 
     private NotificationManagerCompat notificationManager ;
+    private String NotificationText;
+
+    public void setNotificationText(String notificationText){
+        this.NotificationText = notificationText;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String quote ;
-
-        long when = System.currentTimeMillis();
+        SharedPreferences sharedPref = context.getSharedPreferences("notificationTransport", Context.MODE_PRIVATE);
         notificationManager = NotificationManagerCompat.from(context);
 
+        String message = sharedPref.getString("notificationMessage", "default");
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+        notificationIntent.putExtra("companyId", sharedPref.getInt("companyId", -1));
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(),
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         createNotificationChannel();
         Drawable unwrappedDrawable = AppCompatResources.getDrawable(context, R.drawable.marker_red);
-        //Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_foreground);
         NotificationCompat.Builder noti = new NotificationCompat.Builder(context, "1")
                 .setContentTitle("Transport to do")
-                .setContentText("aless you have to do Transport: iron")
+                .setContentText(message)
                 .setSmallIcon(R.drawable.blue_marker)
-                .setLargeIcon(drawableToBitmap(unwrappedDrawable));
+                .setLargeIcon(drawableToBitmap(unwrappedDrawable))
+                .setContentIntent(pendingIntent);
         notificationManager.notify(5, noti.build());
     }
 

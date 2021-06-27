@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.example.logistics.Utilities.REQUEST_IMAGE_CAPTURE;
+import static com.example.logistics.fragment.HomeFragment.HOME_FRAGMENT;
 
 public class NewDriverFragment extends Fragment {
 
@@ -120,9 +121,7 @@ public class NewDriverFragment extends Fragment {
                         String imageUriString = "profile";
                         if(bitmap != null){
                             try {
-                                if(!imageUriString.matches("profile")){
-                                    imageUriString = String.valueOf(saveImage(bitmap, activity));
-                                }
+                                imageUriString = String.valueOf(saveImage(bitmap, activity));
 
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -139,6 +138,7 @@ public class NewDriverFragment extends Fragment {
                         editTextName.setText("");
                         timeStartSet = false; hourStartTV.setText("Hour not set");
                         timeFinishSet = false; hourFinishTV.setText("Hour not set");
+                        Utilities.insertFragment((AppCompatActivity)activity, new HomeFragment(), HOME_FRAGMENT);
                     }
                 }
                 else{

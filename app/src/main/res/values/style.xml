@@ -18,6 +18,9 @@
         <item name="colorSurface">@color/backgroundFragment</item>
         <item name="colorPrimary">@color/dialog</item>
     </style>
-
+    <style name="DialogChoice" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="colorSurface">@color/backgroundFragment</item>
+        <item name="colorPrimary">@color/dialog</item>
+    </style>
 
 </resources>

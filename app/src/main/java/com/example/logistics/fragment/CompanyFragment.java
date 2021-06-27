@@ -114,14 +114,28 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
             @Override
             public void onClick(View v) {
                 //start detailed map fragment
-                Utilities.insertFragment((AppCompatActivity)activity, new DetailedMapFragment(listAvailable, listInProgress), DETAILED_MAP_FRAGMENT);
+                new MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog)
+                        .setMessage("Want to see Done Transports?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Utilities.insertFragment((AppCompatActivity)activity, new );
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utilities.insertFragment((AppCompatActivity)activity, new DetailedMapFragment(listAvailable, listInProgress), DETAILED_MAP_FRAGMENT);
+                            }
+                        })
+                        .show();
             }
         });
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false), CARD_MAP_FRAGMENT);
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false, false), CARD_MAP_FRAGMENT);
     }
 
     private List<CardItemCompany> filterListAvailable(List<CardItemCompany> cardItemCompanies) {

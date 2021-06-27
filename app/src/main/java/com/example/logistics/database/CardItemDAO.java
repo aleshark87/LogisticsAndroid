@@ -30,6 +30,10 @@ public interface CardItemDAO {
     @Query("SELECT * from card_company ORDER BY item_id DESC")
     LiveData<List<CardItemCompany>> getCardItemsCompany();
 
+    @Transaction
+    @Query("SELECT * from card_driver ORDER BY card_driver_name DESC")
+    LiveData<List<CardItemDriver>> getCardItemsDriver();
+
     @Query("DELETE FROM card_company")
     public void nukeTableCompany();
 

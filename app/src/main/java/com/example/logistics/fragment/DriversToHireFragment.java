@@ -30,6 +30,9 @@ import com.example.logistics.viewmodel.NotHiredViewModel;
 
 import java.util.List;
 
+import static com.example.logistics.fragment.DriversHiredFragment.DRIVERS_HIRED_FRAGMENT;
+import static com.example.logistics.fragment.HomeFragment.HOME_FRAGMENT;
+
 public class DriversToHireFragment extends Fragment implements ItemClickListener {
 
     public static final String DRIVERS_TO_HIRE_FRAGMENT = "Drivers_tohire_Fragment";
@@ -79,5 +82,6 @@ public class DriversToHireFragment extends Fragment implements ItemClickListener
         Toast.makeText(activity, "Hired " + adapter.getItem(position).getDriverName(), Toast.LENGTH_SHORT).show();
         //update al carditem
         repository.updateHiredDriver(true, adapter.getItem(position).getDriverName());
+        Utilities.insertFragment((AppCompatActivity)activity, new DriversHiredFragment(), DRIVERS_HIRED_FRAGMENT);
     }
 }

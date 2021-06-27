@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/backgroundFragment"
-    android:layout_marginTop="55dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundFragment"
+        android:layout_marginTop="55dp">
         <TextView
             android:id="@+id/availableTransportsLabelD"
             android:layout_width="wrap_content"
@@ -26,8 +24,9 @@
             style="@style/normalBt"
             app:layout_constraintTop_toBottomOf="@id/availableTransportsLabelD"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="5dp"
+            app:layout_constraintEnd_toStartOf="@id/driverDateFilter"
             android:layout_marginTop="5dp"
             android:text="Product filter">
         </Button>
@@ -40,14 +39,15 @@
             style="@style/normalBt"
             app:layout_constraintTop_toBottomOf="@id/availableTransportsLabelD"
             app:layout_constraintStart_toEndOf="@id/productFilter"
-            android:layout_marginLeft="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="20dp"
             android:text="Driver filter">
         </Button>
 
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/availableMapView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="285dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/driverDateFilter"
             android:layout_marginTop="5dp">
@@ -71,8 +71,9 @@
             style="@style/normalBt"
             app:layout_constraintTop_toBottomOf="@id/inProgressTransportsLabelD"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintEnd_toStartOf="@id/driverDateFilterAv"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:text="Product filter">
         </Button>
@@ -85,18 +86,18 @@
             style="@style/normalBt"
             app:layout_constraintTop_toBottomOf="@id/inProgressTransportsLabelD"
             app:layout_constraintStart_toEndOf="@id/productFilterAv"
-            android:layout_marginLeft="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="20dp"
             android:text="Driver filter">
         </Button>
 
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/inProgressMapView"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="285dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/driverDateFilterAv"
             android:layout_marginTop="5dp">
         </com.mapbox.mapboxsdk.maps.MapView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

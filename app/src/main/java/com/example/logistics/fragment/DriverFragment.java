@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,9 +41,11 @@ import com.example.logistics.recyclerdriver.CardItemDriver;
 import com.example.logistics.viewmodel.CardViewModelCompany;
 import com.example.logistics.viewmodel.NotHiredViewModel;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import androidmads.library.qrgenearator.QRGContents;
@@ -213,7 +216,7 @@ public class DriverFragment extends Fragment implements ItemClickListener {
             takeJob(filteredAvailable.get(position));
         }
         if(name.matches("recyclerInProgressTransports")){
-            Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(filteredInProgress.get(position), true, false), CARD_MAP_FRAGMENT);
+            Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(filteredInProgress.get(position), false, false, true, driver), CARD_MAP_FRAGMENT);
         }
     }
 
@@ -222,27 +225,63 @@ public class DriverFragment extends Fragment implements ItemClickListener {
             Toast.makeText(activity, "Not enough capacity on your truck, " + driver.getDriverName(), Toast.LENGTH_SHORT).show();
         }
         else{
-            repository.updateTransportState("progress", cardItemCompany.getId(), driver.getDriverName());
-            Toast.makeText(activity, "Transport " + cardItemCompany.getTitle() + " taken", Toast.LENGTH_SHORT).show();
-            setAlarm(cardItemCompany);
+            if(timePassed(cardItemCompany)){
+                repository.updateTransportState("progress", cardItemCompany.getId(), driver.getDriverName());
+                Toast.makeText(activity, "Transport " + cardItemCompany.getTitle() + " taken", Toast.LENGTH_SHORT).show();
+                setAlarm(cardItemCompany);
+            }
+            else{
+                Toast.makeText(activity, "You're not working in that hour", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
+    private boolean timePassed(CardItemCompany cardItemCompany) {
+        int startTimeHour = Integer.parseInt(driver.getTimeWork().split("_")[0].split(":")[0]);
+        int startTimeMinute = Integer.parseInt(driver.getTimeWork().split("_")[0].split(":")[1]);
+        int hourJob = Integer.parseInt(cardItemCompany.getDate().split(" ")[1].split(":")[0]);
+        int minuteJob = Integer.parseInt(cardItemCompany.getDate().split(" ")[1].split(":")[1]);
+        if (startTimeHour <= hourJob) {
+            if (startTimeHour == hourJob) {
+                if (startTimeMinute <= minuteJob) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public void setAlarm(CardItemCompany cardItemCompany) {
-        notificationMessage = driver.getDriverName() + " you have to do transport " + cardItemCompany.getTitle();
+        SharedPreferences sharedPref = getContext().getSharedPreferences("notificationTransport", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("notificationMessage", driver.getDriverName() + " you have to do transport " + cardItemCompany.getTitle());
+        editor.putInt("companyId", cardItemCompany.getId());
+        editor.apply();
         Calendar calendar = Calendar.getInstance();
+        String date = cardItemCompany.getDate().split(",")[0];
+        String time = cardItemCompany.getDate().split(" ")[1];
+        String dayOfMonth = date.split("06")[1].split("-")[1];
+        String hour = time.split(":")[0];
+        String minute = time.split(":")[1];
 
-        calendar.set(Calendar.HOUR_OF_DAY, 19);
-        calendar.set(Calendar.MINUTE, 20);
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayOfMonth));
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
+        calendar.set(Calendar.MINUTE, Integer.parseInt(minute));
         calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
 
+       /* calendar.set(Calendar.DAY_OF_MONTH, 27);
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        calendar.set(Calendar.MINUTE, 57);
+        calendar.set(Calendar.SECOND, 0);*/
         Calendar cur = Calendar.getInstance();
-
         if (cur.after(calendar)) {
             calendar.add(Calendar.DATE, 1);
         }
-
+        NotificationReceiver receiver = new NotificationReceiver();
+        receiver.setNotificationText(notificationMessage);
         Intent myIntent = new Intent(activity.getApplicationContext(), NotificationReceiver.class);
         int ALARM1_ID = 10000;
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
