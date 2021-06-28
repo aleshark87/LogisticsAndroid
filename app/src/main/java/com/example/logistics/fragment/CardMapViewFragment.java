@@ -109,8 +109,7 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         this.driver = driver;
     }
 
-    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr,
-                               boolean buttonDoneJob){
+    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr){
         this.cardItemCompany = item;
         this.smallInformation = smallInformation;
         this.noQr = noQr;

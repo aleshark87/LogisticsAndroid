@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 repo.getCardItemCompanyFromId(id).observe((LifecycleOwner) this, new Observer<CardItemCompany>() {
                     @Override
                     public void onChanged(CardItemCompany cardItemCompany) {
-                        Utilities.insertFragment(MainActivity.this, new CardMapViewFragment(cardItemCompany, false, false, false), CARD_MAP_FRAGMENT);
+                        Utilities.insertFragment(MainActivity.this, new CardMapViewFragment(cardItemCompany, false, false), CARD_MAP_FRAGMENT);
                     }
                 });
             }

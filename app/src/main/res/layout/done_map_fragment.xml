@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundFragment"
+    android:layout_marginTop="55dp">
+    <TextView
+        android:id="@+id/availableTransportsLabelD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done Transports"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp">
+    </TextView>
+    <Button
+        android:id="@+id/productFilterDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/normalBt"
+        app:layout_constraintTop_toBottomOf="@id/availableTransportsLabelD"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="5dp"
+        app:layout_constraintEnd_toStartOf="@id/driverDateFilterDone"
+        android:layout_marginTop="5dp"
+        android:text="Product filter">
+    </Button>
+
+    <Button
+        android:layout_marginTop="5dp"
+        android:id="@+id/driverDateFilterDone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/normalBt"
+        app:layout_constraintTop_toBottomOf="@id/availableTransportsLabelD"
+        app:layout_constraintStart_toEndOf="@id/productFilterDone"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="20dp"
+        android:text="Driver filter">
+    </Button>
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/doneMapView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/driverDateFilterDone"
+        android:layout_marginTop="5dp">
+    </com.mapbox.mapboxsdk.maps.MapView>
+</androidx.constraintlayout.widget.ConstraintLayout>

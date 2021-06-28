@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,8 @@ import com.example.logistics.Utilities;
 import com.example.logistics.recyclercompany.CardItemCompany;
 import com.example.logistics.recyclerdriver.CardItemDriver;
 import com.example.logistics.viewmodel.HiredViewModel;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.MapboxDirections;
@@ -54,10 +57,14 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.style.sources.Source;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -86,10 +93,18 @@ public class DetailedMapFragment extends Fragment {
     private List<CardItemCompany> inProgress;
     private MapboxMap mapboxMapAv;
     private MapboxMap mapboxMapInP;
+    private boolean fromDriver;
+    private String formattedDate;
 
     public DetailedMapFragment(List<CardItemCompany> available, List<CardItemCompany> inProgress){
         this.available = available;
         this.inProgress = inProgress;
+    }
+
+    public DetailedMapFragment(List<CardItemCompany> available, List<CardItemCompany> inProgress, boolean fromDriver){
+        this.available = available;
+        this.inProgress = inProgress;
+        this.fromDriver = fromDriver;
     }
 
     @Override
@@ -362,22 +377,34 @@ public class DetailedMapFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.driverDateFilter).setOnClickListener(new View.OnClickListener() {
+        if(!fromDriver){
+            view.findViewById(R.id.driverDateFilter).setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                new MaterialAlertDialogBuilder(activity)
-                        .setTitle("Impossible")
-                        .setMessage("Available Transports cannot be taken by any drivers!")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(View v) {
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle("Impossible")
+                            .setMessage("Available Transports cannot be taken by any drivers!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                            }
-                        })
-                        .show();
-            }
-        });
+                                }
+                            })
+                            .show();
+                }
+            });
+        }
+        else{
+            Button dateButtonAv = view.findViewById(R.id.driverDateFilter);
+            dateButtonAv.setText("DATE FILTER");
+            dateButtonAv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
 
         view.findViewById(R.id.productFilterAv).setOnClickListener(new View.OnClickListener() {
 
@@ -553,186 +580,452 @@ public class DetailedMapFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.driverDateFilter).setOnClickListener(new View.OnClickListener() {
+        if(!fromDriver){
 
-            @Override
-            public void onClick(View v) {
-                new MaterialAlertDialogBuilder(activity)
-                        .setTitle("Impossible")
-                        .setMessage("Available Transports cannot be taken by any drivers!")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+            view.findViewById(R.id.driverDateFilter).setOnClickListener(new View.OnClickListener() {
 
+                @Override
+                public void onClick(View v) {
+                    new MaterialAlertDialogBuilder(activity)
+                            .setTitle("Impossible")
+                            .setMessage("Available Transports cannot be taken by any drivers!")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+            });
+        }
+        else{
+            MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select date")
+                    .setTheme(R.style.DatePicker)
+                    .build();
+            datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+
+                @Override
+                public void onPositiveButtonClick(Object selection) {
+                    Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    utc.setTimeInMillis((Long)selection);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    formattedDate = format.format(utc.getTime());
+                    mapboxMapAv.getStyle(new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+                            for(CardItemCompany availableItem : DetailedMapFragment.this.available){
+                                if(!availableItem.getDate().split(",")[0].matches(formattedDate)){
+                                    removeRouteOnMap(style, availableItem.getId());
+                                }
+                                else{
+                                    //se l'elemento non è in mappa bisogna rimetterlo
+                                    if(!isRouteOnMap(style, availableItem.getId())){
+                                        addRouteOnMap(style, availableItem.getId());
+                                    }
+                                }
                             }
-                        })
-                        .show();
-            }
-        });
-        view.findViewById(R.id.driverDateFilterAv).setOnClickListener(new View.OnClickListener() {
-
-            private int lastClickedItem;
-            private String[] names;
-
-            @Override
-            public void onClick(View v) {
-                lastClickedItem = 0;
-                HiredViewModel hiredViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(HiredViewModel.class);
-                hiredViewModel.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItemDriver>>() {
-                    @Override
-                    public void onChanged(List<CardItemDriver> cardItemDrivers) {
-                        int size = cardItemDrivers.size();
-                        names = new String[size];
-                        int i = 0;
-                        for(CardItemDriver driver : cardItemDrivers){
-                            names[i] = driver.getDriverName();
-                            i++;
                         }
-                        new MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog)
-                                .setTitle("Choose the product to filter")
-                                .setPositiveButton("Go", new DialogInterface.OnClickListener() {
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mapboxMapInP.getStyle(new Style.OnStyleLoaded() {
-                                            @Override
-                                            public void onStyleLoaded(@NonNull Style style) {
-                                                for(CardItemCompany availableItem : DetailedMapFragment.this.inProgress){
-                                                    if(!availableItem.getDriverName().matches(getProductClicked())){
-                                                        removeRouteOnMap(style, availableItem.getId());
+                        private void addRouteOnMap(Style mapStyle, int idCardItem){
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
+                        }
+
+                        private boolean isRouteOnMap(Style mapStyle, int idCardItem){
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            if(mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)){
+                                return true;
+                            }
+                            else{
+                                return false;
+                            }
+                        }
+
+                        private void removeRouteOnMap(Style mapStyle, int idCardItem){
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
+                        }
+
+                        private void setVisibilities(Layer layer, boolean visibility){
+                            if (layer != null) {
+                                if(!visibility){
+                                    if (VISIBLE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(NONE));
+                                    }
+                                }
+                                else {
+                                    if (NONE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(VISIBLE));
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            datePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mapboxMapAv.getStyle(new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+                            for (CardItemCompany availableItem : DetailedMapFragment.this.available) {
+                                if (!isRouteOnMap(style, availableItem.getId())) {
+                                    addRouteOnMap(style, availableItem.getId());
+                                }
+                            }
+                        }
+
+                        private void addRouteOnMap(Style mapStyle, int idCardItem) {
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
+                        }
+
+                        private boolean isRouteOnMap(Style mapStyle, int idCardItem) {
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            if (mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+
+                        private void removeRouteOnMap(Style mapStyle, int idCardItem) {
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
+                        }
+
+                        private void setVisibilities(Layer layer, boolean visibility) {
+                            if (layer != null) {
+                                if (!visibility) {
+                                    if (VISIBLE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(NONE));
+                                    }
+                                } else {
+                                    if (NONE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(VISIBLE));
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            Button dateButtonAv = view.findViewById(R.id.driverDateFilter);
+            dateButtonAv.setText("DATE FILTER");
+            dateButtonAv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    datePicker.show(getParentFragmentManager(), "tag");
+                }
+            });
+        }
+
+        if(!fromDriver) {
+
+            view.findViewById(R.id.driverDateFilterAv).setOnClickListener(new View.OnClickListener() {
+
+                private int lastClickedItem;
+                private String[] names;
+
+                @Override
+                public void onClick(View v) {
+                    lastClickedItem = 0;
+                    HiredViewModel hiredViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(HiredViewModel.class);
+                    hiredViewModel.getCardItems().observe((LifecycleOwner) activity, new Observer<List<CardItemDriver>>() {
+                        @Override
+                        public void onChanged(List<CardItemDriver> cardItemDrivers) {
+                            int size = cardItemDrivers.size();
+                            names = new String[size];
+                            int i = 0;
+                            for (CardItemDriver driver : cardItemDrivers) {
+                                names[i] = driver.getDriverName();
+                                i++;
+                            }
+                            new MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog)
+                                    .setTitle("Choose the product to filter")
+                                    .setPositiveButton("Go", new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mapboxMapInP.getStyle(new Style.OnStyleLoaded() {
+                                                @Override
+                                                public void onStyleLoaded(@NonNull Style style) {
+                                                    for (CardItemCompany availableItem : DetailedMapFragment.this.inProgress) {
+                                                        if (!availableItem.getDriverName().matches(getProductClicked())) {
+                                                            removeRouteOnMap(style, availableItem.getId());
+                                                        } else {
+                                                            //se l'elemento non è in mappa bisogna rimetterlo
+                                                            if (!isRouteOnMap(style, availableItem.getId())) {
+                                                                addRouteOnMap(style, availableItem.getId());
+                                                            }
+                                                        }
                                                     }
-                                                    else{
+                                                }
+
+                                                private void addRouteOnMap(Style mapStyle, int idCardItem) {
+                                                    String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                                                    String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                                                    setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
+                                                    setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
+                                                }
+
+                                                private boolean isRouteOnMap(Style mapStyle, int idCardItem) {
+                                                    String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                                                    if (mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)) {
+                                                        return true;
+                                                    } else {
+                                                        return false;
+                                                    }
+                                                }
+
+                                                private void removeRouteOnMap(Style mapStyle, int idCardItem) {
+                                                    String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                                                    String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                                                    setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
+                                                    setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
+                                                }
+
+                                                private void setVisibilities(Layer layer, boolean visibility) {
+                                                    if (layer != null) {
+                                                        if (!visibility) {
+                                                            if (VISIBLE.equals(layer.getVisibility().getValue())) {
+                                                                layer.setProperties(visibility(NONE));
+                                                            }
+                                                        } else {
+                                                            if (NONE.equals(layer.getVisibility().getValue())) {
+                                                                layer.setProperties(visibility(VISIBLE));
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+
+                                                private String getProductClicked() {
+                                                    return names[lastClickedItem];
+                                                }
+
+                                            });
+                                        }
+                                    })
+
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mapboxMapInP.getStyle(new Style.OnStyleLoaded() {
+                                                @Override
+                                                public void onStyleLoaded(@NonNull Style style) {
+                                                    for (CardItemCompany availableItem : DetailedMapFragment.this.inProgress) {
                                                         //se l'elemento non è in mappa bisogna rimetterlo
-                                                        if(!isRouteOnMap(style, availableItem.getId())){
+                                                        if (!isRouteOnMap(style, availableItem.getId())) {
                                                             addRouteOnMap(style, availableItem.getId());
                                                         }
+
                                                     }
                                                 }
-                                            }
 
-                                            private void addRouteOnMap(Style mapStyle, int idCardItem){
-                                                String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
-                                                String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
-                                                setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
-                                                setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
-                                            }
-
-                                            private boolean isRouteOnMap(Style mapStyle, int idCardItem){
-                                                String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
-                                                if(mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)){
-                                                    return true;
+                                                private void addRouteOnMap(Style mapStyle, int idCardItem) {
+                                                    String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                                                    String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                                                    setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
+                                                    setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
                                                 }
-                                                else{
-                                                    return false;
+
+                                                private boolean isRouteOnMap(Style mapStyle, int idCardItem) {
+                                                    String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                                                    if (mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)) {
+                                                        return true;
+                                                    } else {
+                                                        return false;
+                                                    }
                                                 }
-                                            }
 
-                                            private void removeRouteOnMap(Style mapStyle, int idCardItem){
-                                                String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
-                                                String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
-                                                setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
-                                                setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
-                                            }
+                                                private void removeRouteOnMap(Style mapStyle, int idCardItem) {
+                                                    String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                                                    String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                                                    setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
+                                                    setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
+                                                }
 
-                                            private void setVisibilities(Layer layer, boolean visibility){
-                                                if (layer != null) {
-                                                    if(!visibility){
-                                                        if (VISIBLE.equals(layer.getVisibility().getValue())) {
-                                                            layer.setProperties(visibility(NONE));
+                                                private void setVisibilities(Layer layer, boolean visibility) {
+                                                    if (layer != null) {
+                                                        if (!visibility) {
+                                                            if (VISIBLE.equals(layer.getVisibility().getValue())) {
+                                                                layer.setProperties(visibility(NONE));
+                                                            }
+                                                        } else {
+                                                            if (NONE.equals(layer.getVisibility().getValue())) {
+                                                                layer.setProperties(visibility(VISIBLE));
+                                                            }
                                                         }
                                                     }
-                                                    else {
-                                                        if (NONE.equals(layer.getVisibility().getValue())) {
-                                                            layer.setProperties(visibility(VISIBLE));
-                                                        }
-                                                    }
                                                 }
-                                            }
 
 
+                                                private String getProductClicked() {
+                                                    return names[lastClickedItem];
+                                                }
 
-                                            private String getProductClicked(){
-                                                return names[lastClickedItem];
-                                            }
+                                            });
+                                        }
+                                    })
+                                    .setSingleChoiceItems(names, lastClickedItem, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            lastClickedItem = which;
+                                        }
+                                    })
+                                    .show();
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText("Select date")
+                    .setTheme(R.style.DatePicker)
+                    .build();
+            datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
 
-                                        });
+                @Override
+                public void onPositiveButtonClick(Object selection) {
+                    Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                    utc.setTimeInMillis((Long)selection);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    formattedDate = format.format(utc.getTime());
+                    mapboxMapInP.getStyle(new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+                            for(CardItemCompany availableItem : DetailedMapFragment.this.inProgress){
+                                if(!availableItem.getDate().split(",")[0].matches(formattedDate)){
+                                    removeRouteOnMap(style, availableItem.getId());
+                                }
+                                else{
+                                    //se l'elemento non è in mappa bisogna rimetterlo
+                                    if(!isRouteOnMap(style, availableItem.getId())){
+                                        addRouteOnMap(style, availableItem.getId());
                                     }
-                                })
+                                }
+                            }
+                        }
 
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        mapboxMapInP.getStyle(new Style.OnStyleLoaded() {
-                                            @Override
-                                            public void onStyleLoaded(@NonNull Style style) {
-                                                for(CardItemCompany availableItem : DetailedMapFragment.this.inProgress){
-                                                    //se l'elemento non è in mappa bisogna rimetterlo
-                                                    if(!isRouteOnMap(style, availableItem.getId())){
-                                                        addRouteOnMap(style, availableItem.getId());
-                                                    }
+                        private void addRouteOnMap(Style mapStyle, int idCardItem){
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
+                        }
 
-                                                }
-                                            }
+                        private boolean isRouteOnMap(Style mapStyle, int idCardItem){
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            if(mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)){
+                                return true;
+                            }
+                            else{
+                                return false;
+                            }
+                        }
 
-                                            private void addRouteOnMap(Style mapStyle, int idCardItem){
-                                                String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
-                                                String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
-                                                setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
-                                                setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
-                                            }
+                        private void removeRouteOnMap(Style mapStyle, int idCardItem){
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
+                        }
 
-                                            private boolean isRouteOnMap(Style mapStyle, int idCardItem){
-                                                String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
-                                                if(mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)){
-                                                    return true;
-                                                }
-                                                else{
-                                                    return false;
-                                                }
-                                            }
-
-                                            private void removeRouteOnMap(Style mapStyle, int idCardItem){
-                                                String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
-                                                String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
-                                                setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
-                                                setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
-                                            }
-
-                                            private void setVisibilities(Layer layer, boolean visibility){
-                                                if (layer != null) {
-                                                    if(!visibility){
-                                                        if (VISIBLE.equals(layer.getVisibility().getValue())) {
-                                                            layer.setProperties(visibility(NONE));
-                                                        }
-                                                    }
-                                                    else {
-                                                        if (NONE.equals(layer.getVisibility().getValue())) {
-                                                            layer.setProperties(visibility(VISIBLE));
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-
-
-                                            private String getProductClicked(){
-                                                return names[lastClickedItem];
-                                            }
-
-                                        });
+                        private void setVisibilities(Layer layer, boolean visibility){
+                            if (layer != null) {
+                                if(!visibility){
+                                    if (VISIBLE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(NONE));
                                     }
-                                })
-                                .setSingleChoiceItems(names, lastClickedItem, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        lastClickedItem = which;
+                                }
+                                else {
+                                    if (NONE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(VISIBLE));
                                     }
-                                })
-                                .show();
-                    }
-                });
-            }
-        });
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            datePicker.addOnNegativeButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mapboxMapInP.getStyle(new Style.OnStyleLoaded() {
+                        @Override
+                        public void onStyleLoaded(@NonNull Style style) {
+                            for (CardItemCompany availableItem : DetailedMapFragment.this.inProgress) {
+                                if (!isRouteOnMap(style, availableItem.getId())) {
+                                    addRouteOnMap(style, availableItem.getId());
+                                }
+                            }
+                        }
+
+                        private void addRouteOnMap(Style mapStyle, int idCardItem) {
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), true);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), true);
+                        }
+
+                        private boolean isRouteOnMap(Style mapStyle, int idCardItem) {
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            if (mapStyle.getLayer(ROUTE_LAYER_ID).getVisibility().getValue().equals(VISIBLE)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+
+                        private void removeRouteOnMap(Style mapStyle, int idCardItem) {
+                            String ROUTE_LAYER_ID = "route-layer-id" + idCardItem;
+                            String ICON_LAYER_ID = "icon-layer-id" + idCardItem;
+                            setVisibilities(mapStyle.getLayer(ROUTE_LAYER_ID), false);
+                            setVisibilities(mapStyle.getLayer(ICON_LAYER_ID), false);
+                        }
+
+                        private void setVisibilities(Layer layer, boolean visibility) {
+                            if (layer != null) {
+                                if (!visibility) {
+                                    if (VISIBLE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(NONE));
+                                    }
+                                } else {
+                                    if (NONE.equals(layer.getVisibility().getValue())) {
+                                        layer.setProperties(visibility(VISIBLE));
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            Button dateButtonAv = view.findViewById(R.id.driverDateFilterAv);
+            dateButtonAv.setText("DATE FILTER");
+            dateButtonAv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    datePicker.show(getParentFragmentManager(), "tag");
+                }
+            });
+        }
     }
 
     private void initSource(@NonNull Style loadedMapStyle, CardItemCompany cardItemCompany, String ROUTE_SOURCE_ID, String ICON_SOURCE_ID) {

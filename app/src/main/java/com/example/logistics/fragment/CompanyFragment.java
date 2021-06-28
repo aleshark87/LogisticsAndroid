@@ -34,6 +34,7 @@ import java.util.List;
 import static com.example.logistics.fragment.AddTransportFragment.ADD_TRANSPORT_FRAGMENT;
 import static com.example.logistics.fragment.CardMapViewFragment.CARD_MAP_FRAGMENT;
 import static com.example.logistics.fragment.DetailedMapFragment.DETAILED_MAP_FRAGMENT;
+import static com.example.logistics.fragment.DoneMapDetailFragment.DONE_MAP_FRAGMENT;
 import static com.example.logistics.fragment.DriversHiredFragment.DRIVERS_HIRED_FRAGMENT;
 import static com.example.logistics.fragment.DriversToHireFragment.DRIVERS_TO_HIRE_FRAGMENT;
 
@@ -45,6 +46,7 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
     private CardViewModelCompany cardViewModelCompany;
     private List<CardItemCompany> listAvailable;
     private List<CardItemCompany> listInProgress;
+    private List<CardItemCompany> listDone;
 
     @Override
     public void onAttach(Context context) {
@@ -86,6 +88,7 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
                 adapterCompany.setData(cardItemCompanies);
                 filterListAvailable(cardItemCompanies);
                 filterListInProgress(cardItemCompanies);
+                filterListDone(cardItemCompanies);
             }
         });
 
@@ -119,7 +122,8 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Utilities.insertFragment((AppCompatActivity)activity, new );
+                                //DONE TRANSPORTS
+                                Utilities.insertFragment((AppCompatActivity)activity, new DoneMapDetailFragment(listDone), DONE_MAP_FRAGMENT);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -135,7 +139,7 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
 
     @Override
     public void onItemClick(View view, int position) {
-        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false, false), CARD_MAP_FRAGMENT);
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false), CARD_MAP_FRAGMENT);
     }
 
     private List<CardItemCompany> filterListAvailable(List<CardItemCompany> cardItemCompanies) {
@@ -172,6 +176,22 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
             copy.remove(card);
         }
         listInProgress = copy;
+        return copy;
+    }
+
+    private List<CardItemCompany> filterListDone(List<CardItemCompany> cardItemCompanies) {
+        List<CardItemCompany> copy = new ArrayList<>(new ArrayList<>(cardItemCompanies));
+        List<CardItemCompany> transportToRemove = new ArrayList<>();
+        for (CardItemCompany card : copy) {
+            //da fare presa in carico
+            if (!card.getTransportState().matches("done")/* && !driver.getDriverName().matches(card.getDriverName()*/) {
+                transportToRemove.add(card);
+            }
+        }
+        for (CardItemCompany card : transportToRemove) {
+            copy.remove(card);
+        }
+        listDone = copy;
         return copy;
     }
 }

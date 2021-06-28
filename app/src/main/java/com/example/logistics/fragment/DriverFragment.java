@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -40,6 +41,7 @@ import com.example.logistics.recyclerdriver.AdapterDriverToHire;
 import com.example.logistics.recyclerdriver.CardItemDriver;
 import com.example.logistics.viewmodel.CardViewModelCompany;
 import com.example.logistics.viewmodel.NotHiredViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -52,6 +54,8 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 
 import static com.example.logistics.fragment.CardMapViewFragment.CARD_MAP_FRAGMENT;
+import static com.example.logistics.fragment.DetailedMapFragment.DETAILED_MAP_FRAGMENT;
+import static com.example.logistics.fragment.DoneMapDetailFragment.DONE_MAP_FRAGMENT;
 import static com.example.logistics.fragment.QrReaderFragment.QR_FRAGMENT;
 
 public class DriverFragment extends Fragment implements ItemClickListener {
@@ -146,16 +150,44 @@ public class DriverFragment extends Fragment implements ItemClickListener {
                 Utilities.insertFragment((AppCompatActivity)activity, new QrReaderFragment(), QR_FRAGMENT);
             }
         });
+
+        view.findViewById(R.id.detailedMapDriver).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //start detailed map fragment
+                new MaterialAlertDialogBuilder(activity, R.style.MaterialAlertDialog)
+                        .setMessage("Want to see Done Transports?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //DONE TRANSPORTS
+                                Utilities.insertFragment((AppCompatActivity)activity, new DoneMapDetailFragment(filteredDone, true), DONE_MAP_FRAGMENT);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Utilities.insertFragment((AppCompatActivity)activity, new DetailedMapFragment(filteredAvailable, filteredInProgress, true), DETAILED_MAP_FRAGMENT);
+                            }
+                        })
+                        .show();
+            }
+        });
     }
 
     private List<CardItemCompany> filterListDone(List<CardItemCompany> cardItemCompanies) {
         List<CardItemCompany> copy = new ArrayList<>(new ArrayList<>(cardItemCompanies));
         List<CardItemCompany> transportToRemove = new ArrayList<>();
         for (CardItemCompany card : copy) {
-            //da fare presa in carico
-            if (!card.getTransportState().matches("done")/* && !driver.getDriverName().matches(card.getDriverName()*/) {
+            if(card.getTransportState().matches("insered") || card.getTransportState().matches("progress")){
                 transportToRemove.add(card);
             }
+            else{
+                if(!driver.getDriverName().matches(card.getDriverName())) {
+                    transportToRemove.add(card);
+                }
+            }
+
         }
         for (CardItemCompany card : transportToRemove) {
             copy.remove(card);
