@@ -107,10 +107,6 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
     private boolean timeSet = false;
 
     //TODO rimuovere sistema togli vecchi
-    //TODO finire mappa filtrata driver, e fare mappa per doneTransports
-    //TODO controllo ora autisti e trasporti ( fatto da verificare )
-    //TODO done transports vorrei anche la data di fine..
-    //TODO nuova view company(solo job available, oppure tre categorie, oppure solo in progress)
     //TODO filtri combinati (OPZIONALE)
     //TODO visualizzazione fuori orologio con 13:00,01(OPZIONALE)
 

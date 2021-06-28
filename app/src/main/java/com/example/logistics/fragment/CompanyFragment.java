@@ -139,7 +139,7 @@ public class CompanyFragment extends Fragment implements ItemClickListener{
 
     @Override
     public void onItemClick(View view, int position) {
-        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false), CARD_MAP_FRAGMENT);
+        Utilities.insertFragment((AppCompatActivity)activity, new CardMapViewFragment(adapterCompany.getItem(position), false, false, true), CARD_MAP_FRAGMENT);
     }
 
     private List<CardItemCompany> filterListAvailable(List<CardItemCompany> cardItemCompanies) {

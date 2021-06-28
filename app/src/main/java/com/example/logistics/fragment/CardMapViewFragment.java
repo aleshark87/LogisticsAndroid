@@ -97,6 +97,7 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
     private boolean smallInformation;
     private boolean noQr;
     private boolean buttonDoneJob;
+    private boolean fromCompany;
     private CardItemRepo repo;
     private CardItemDriver driver;
 
@@ -107,6 +108,15 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         this.noQr = noQr;
         this.buttonDoneJob = buttonDoneJob;
         this.driver = driver;
+        this.fromCompany = false;
+    }
+
+    public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr,
+                               boolean fromCompany){
+        this.cardItemCompany = item;
+        this.smallInformation = smallInformation;
+        this.noQr = noQr;
+        this.fromCompany = fromCompany;
     }
 
     public CardMapViewFragment(CardItemCompany item, boolean smallInformation, boolean noQr){
@@ -114,6 +124,7 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
         this.smallInformation = smallInformation;
         this.noQr = noQr;
         this.buttonDoneJob = buttonDoneJob;
+        this.fromCompany = false;
     }
 
     @Override
@@ -315,7 +326,13 @@ public class CardMapViewFragment extends Fragment implements OnMapReadyCallback{
             int startHours = Integer.parseInt(dateStart.split(":")[0]);
             int startMinutes = Integer.parseInt(dateStart.split(":")[1]);
             msg = "The distance is " + distanceRounded + " km and it will be " + timeRounder(route.duration()).get(0) +
-                    ". Estimated Time of Arrive : " + arriveTime(startHours, startMinutes, numberOfHours, numberOfMinutes);
+                    ".\nEstimated Time of Arrive : " + arriveTime(startHours, startMinutes, numberOfHours, numberOfMinutes);
+            if(fromCompany){
+                msg += "\nTransport state is " + cardItemCompany.getTransportState();
+                if(!cardItemCompany.getTransportState().matches("insered")){
+                    msg += "\nDriver is " + cardItemCompany.getDriverName();
+                }
+            }
         }
 
 
