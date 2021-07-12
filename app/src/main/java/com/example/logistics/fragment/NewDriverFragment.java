@@ -1,10 +1,12 @@
 package com.example.logistics.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,6 +24,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -89,6 +93,10 @@ public class NewDriverFragment extends Fragment {
         repository = new CardItemRepo(activity.getApplication());
         Utilities.setUpToolbar((AppCompatActivity)activity, "New Driver");
         getItemsFromView(view);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.CAMERA}, 200);
+        }
         viewModelPhoto = new ViewModelProvider((ViewModelStoreOwner) activity).get(DriverPhotoViewModel.class);
         notHiredViewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(NotHiredViewModel.class);
         captureButton.setOnClickListener(new View.OnClickListener() {

@@ -101,11 +101,11 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Utilities.setUpToolbar((AppCompatActivity) activity, "Location Picker");
-        // Initialize the mapboxMap view
         selectLocationButton = view.findViewById(R.id.select_location_button);
         selectLocationButton.setBackgroundColor(
                 ContextCompat.getColor(getContext(), R.color.star_command));
         selectLocationButton.setText("Select Location");
+        // Initialize the mapboxMap view
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -119,7 +119,6 @@ public class LocationPickerFragment extends Fragment implements PermissionsListe
     }
 
     @Override
-    @SuppressWarnings( {"MissingPermission"})
     public void onStart() {
         super.onStart();
         mapView.onStart();

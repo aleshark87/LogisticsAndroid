@@ -43,6 +43,8 @@ import com.example.logistics.viewmodel.CardViewModelCompany;
 import com.example.logistics.viewmodel.NotHiredViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -295,10 +297,9 @@ public class DriverFragment extends Fragment implements ItemClickListener {
         Calendar calendar = Calendar.getInstance();
         String date = cardItemCompany.getDate().split(",")[0];
         String time = cardItemCompany.getDate().split(" ")[1];
-        String dayOfMonth = date.split("06")[1].split("-")[1];
+        String dayOfMonth = date.split("-")[2];
         String hour = time.split(":")[0];
         String minute = time.split(":")[1];
-
         calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayOfMonth));
         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour));
         calendar.set(Calendar.MINUTE, Integer.parseInt(minute));

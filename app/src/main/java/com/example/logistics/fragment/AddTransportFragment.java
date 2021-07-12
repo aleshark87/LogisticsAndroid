@@ -233,7 +233,13 @@ public class AddTransportFragment extends Fragment implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 timeSet = true;
-                formattedTime = timePicker.getHour() + ":" + timePicker.getMinute();
+                if(timePicker.getMinute() < 10){
+                    formattedTime = timePicker.getHour() + ":" + "0" + timePicker.getMinute();
+                }
+                else{
+                    formattedTime = timePicker.getHour() + ":" + timePicker.getMinute();
+                }
+
                 if(dateSet){
                     resultDateView.setText("Date set " + formattedDate + ", Time set " + formattedTime);
                 }

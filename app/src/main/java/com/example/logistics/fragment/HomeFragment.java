@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,6 @@ private Activity activity;
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         activity = getActivity();
-
         if(activity != null) {
             Utilities.setUpToolbar((AppCompatActivity) activity, "Logistics");
             view.findViewById(R.id.companyBt).setOnClickListener(new View.OnClickListener() {
